@@ -1,0 +1,90 @@
+export const artistsCatalog: Array<{
+  artistName: string;
+  aliases?: string[];
+}> = [
+  { artistName: 'Aphex Twin' },
+  { artistName: 'Surgeon' },
+  { artistName: 'DVS1' },
+  { artistName: 'Objekt' },
+  { artistName: 'Helena Hauff' },
+  { artistName: 'Rodhad' },
+  { artistName: 'Blawan' },
+  { artistName: 'Sam Paganini' },
+  { artistName: 'Steffi' },
+  { artistName: 'Nina Kraviz' },
+  { artistName: 'Richie Hawtin' },
+  { artistName: 'Jeff Mills' },
+  { artistName: 'Robert Hood' },
+  { artistName: 'Claude Young' },
+  { artistName: 'Tiefschwarz' },
+  { artistName: 'Phace' },
+  { artistName: 'Skee Mask' },
+  { artistName: 'Autechre' },
+  { artistName: 'Sicher' },
+  { artistName: 'Dopplereffekt' },
+  { artistName: 'Truncate' },
+  { artistName: 'Gantz' },
+  { artistName: 'Bjork' },
+
+  { artistName: 'Klangkuenstler' },
+  { artistName: 'Fjader' },
+  { artistName: 'Teklife' },
+  { artistName: 'Donato Dozzy' },
+  { artistName: 'Xhin' },
+  { artistName: 'Sofia Kourtesis' },
+  { artistName: 'Lusine' },
+  { artistName: 'The Black Madonna' },
+  { artistName: 'Mary Anne Hobbs' },
+
+  { artistName: 'Dixon' },
+  { artistName: 'Maceo Plex' },
+  { artistName: 'Rrose' },
+  { artistName: 'Cassegrain' },
+  { artistName: 'Ben UFO' },
+  { artistName: 'Yoyaku' },
+  { artistName: 'Karotte' },
+  { artistName: 'Biosphere' },
+  { artistName: 'Mount Kimbie' },
+
+  { artistName: 'DJ Stingray 313' },
+  { artistName: 'Kiasmos' },
+  { artistName: 'DJ Koze' },
+  { artistName: 'Ben Klock' },
+  { artistName: 'Thomas P. Heckmann' },
+  { artistName: 'Charlotte de Witte' },
+  { artistName: 'Amelie Lens' },
+  { artistName: 'Adriatique' },
+  { artistName: 'Funk' },
+
+  { artistName: 'T++' },
+  { artistName: 'Efdemin' },
+  { artistName: 'A Made Up Sound' },
+  { artistName: 'Kode9' },
+  { artistName: 'B12' },
+  { artistName: 'Ryuji Takeuchi' },
+  { artistName: 'Nachtstrom' },
+  { artistName: 'Synthetik' },
+  { artistName: 'Recondite' },
+  { artistName: 'MDR' },
+
+  { artistName: 'Dopplereffekt' },
+  { artistName: 'Arovane' },
+  { artistName: 'Pantha du Prince' },
+  { artistName: 'Agoria' },
+  { artistName: 'Caribou' },
+  { artistName: 'The Hacker' },
+  { artistName: 'Slam' },
+  { artistName: 'Dr Rubinstein' },
+  { artistName: 'Shed' },
+  { artistName: 'Four Tet' },
+];
+
+export const normalizedArtistNamesLowercase = artistsCatalog.map(
+  (artist) => ({
+    artistName: artist.artistName,
+    searchKey: [artist.artistName, ...(artist.aliases ?? [])]
+      .join(' ')
+      .toLowerCase(),
+  }),
+);
+

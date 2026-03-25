@@ -1,0 +1,206 @@
+.posterRoot {
+  position: relative;
+  width: 1080px;
+  height: 1920px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #06070d;
+}
+
+.festivalPosterRoot {
+  box-shadow: 0 24px 100px rgba(0, 0, 0, 0.65);
+}
+
+.festivalLayer {
+  position: absolute;
+  inset: 0;
+}
+
+.festivalSkywash {
+  background: radial-gradient(120% 80% at 50% 18%, #fff1d6 0%, #ff9aa1 28%, #ff5f6d 52%, #7c5cff 100%);
+  opacity: 0.95;
+}
+
+.festivalSunDisc {
+  inset: auto;
+  width: 800px;
+  height: 800px;
+  border-radius: 50%;
+  left: 50%;
+  top: 34%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle at 40% 40%, #fff6d2 0%, #ffc857 35%, #ff7b54 70%, rgba(255, 123, 84, 0) 72%);
+}
+
+.festivalHillSilhouette {
+  inset: auto;
+  left: -12%;
+  right: -12%;
+  bottom: 42%;
+  height: 40%;
+  background: #06070d;
+  clip-path: polygon(0% 55%, 12% 40%, 28% 52%, 44% 32%, 62% 48%, 78% 28%, 100% 46%, 100% 100%, 0% 100%);
+  opacity: 0.98;
+}
+
+.festivalPaperCard {
+  inset: auto;
+  left: 64px;
+  right: 64px;
+  top: 50%;
+  bottom: 120px;
+  border-radius: 24px;
+  background: linear-gradient(180deg, #fff7ea 0%, #f3e5d2 100%);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+}
+
+.festivalPaperCardContent {
+  position: absolute;
+  left: 64px;
+  right: 64px;
+  top: 50%;
+  bottom: 120px;
+  padding: 52px 56px 40px;
+  border-radius: 24px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.festivalHeaderBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.festivalKickerLine {
+  margin: 0;
+  font-family: Barlow Condensed, system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  font-size: 28px;
+  text-transform: uppercase;
+  color: #6a5acd;
+}
+
+.festivalVenueWordmark {
+  margin: 0;
+  font-family: Archivo Black, system-ui, sans-serif;
+  font-size: 118px;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: #141018;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.8), 0 12px 40px rgba(225, 29, 72, 0.35);
+}
+
+.festivalSubtitle {
+  margin: 0;
+  font-family: Crimson Pro, Georgia, serif;
+  font-size: 34px;
+  line-height: 1.2;
+  color: #3b2f2f;
+}
+
+.festivalLineupList {
+  list-style: none;
+  margin: 28px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  flex: 1;
+}
+
+.festivalLineupRow {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 18px;
+  align-items: baseline;
+}
+
+.festivalRowTimeBlock {
+  display: grid;
+  gap: 6px;
+}
+
+.festivalDayBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 12px;
+  border-radius: 999px;
+  font-family: Barlow Condensed, system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 30px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fffaf3;
+  background: linear-gradient(135deg, #ff5f6d, #7c5cff);
+}
+
+.festivalClockLabel {
+  font-family: Barlow Condensed, system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 30px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(26, 20, 32, 0.55);
+}
+
+.festivalRowArtistBlock {
+  display: flex;
+  align-items: baseline;
+}
+
+.festivalArtistName {
+  font-family: Archivo Black, system-ui, sans-serif;
+  font-size: 46px;
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: #141018;
+}
+
+.festivalFooterBlock {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 2px dashed rgba(26, 20, 32, 0.18);
+  display: grid;
+  gap: 10px;
+}
+
+.festivalDisclaimer {
+  margin: 0;
+  font-family: Crimson Pro, Georgia, serif;
+  font-size: 22px;
+  line-height: 1.35;
+  color: rgba(26, 20, 32, 0.65);
+}
+
+.festivalWebsiteFooter {
+  margin: 0;
+  font-family: Barlow Condensed, system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 30px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #6a5acd;
+}
+
+.posterGrainOverlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0.14;
+  mix-blend-mode: overlay;
+}
+
+.posterInlineGrainSvg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+

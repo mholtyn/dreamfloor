@@ -1,0 +1,61 @@
+.presetGallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.presetCard {
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  display: grid;
+  gap: 10px;
+  color: inherit;
+  text-align: left;
+  transition: border-color 0.15s, transform 0.15s, background-color 0.15s;
+}
+
+.presetCard:hover {
+  transform: translateY(-1px);
+  border-color: rgba(0, 0, 0, 0.28);
+}
+
+.presetCardActive {
+  border-color: rgba(125, 73, 255, 0.7);
+  background: rgba(125, 73, 255, 0.08);
+}
+
+.presetCardThumb {
+  height: 120px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+
+.presetCardThumb--festival_sunset {
+  background: radial-gradient(120% 80% at 50% 18%, #fff1d6 0%, #ff9aa1 28%, #ff5f6d 52%, #7c5cff 100%);
+}
+
+.presetCardThumb--signal_industrial {
+  background: linear-gradient(180deg, rgba(6, 10, 10, 0.95), rgba(0, 0, 0, 0.15)),
+    repeating-linear-gradient(
+      0deg,
+      rgba(45, 212, 191, 0.08) 0px,
+      rgba(45, 212, 191, 0.08) 1px,
+      transparent 1px,
+      transparent 48px
+    );
+}
+
+.presetCardText {
+  display: flex;
+  align-items: flex-start;
+}
+
+.presetCardName {
+  font-weight: 700;
+  font-size: 14px;
+}
+

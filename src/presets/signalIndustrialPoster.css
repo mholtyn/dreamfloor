@@ -1,0 +1,252 @@
+.posterRoot {
+  position: relative;
+  width: 1080px;
+  height: 1920px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #070808;
+}
+
+.signalPosterRoot {
+  box-shadow: 0 24px 100px rgba(0, 0, 0, 0.85);
+}
+
+.signalLayer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.signalGrid {
+  background-color: #060808;
+  background-image:
+    linear-gradient(rgba(45, 212, 191, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(45, 212, 191, 0.045) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.signalVignette {
+  background: radial-gradient(ellipse 90% 75% at 50% 35%, transparent 0%, rgba(0, 0, 0, 0.55) 75%, #000000 100%);
+}
+
+.signalScanBand {
+  top: 38%;
+  height: 22%;
+  left: 0;
+  right: 0;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(34, 211, 238, 0.04) 40%,
+    rgba(45, 212, 191, 0.06) 50%,
+    rgba(34, 211, 238, 0.04) 60%,
+    transparent
+  );
+  pointer-events: none;
+}
+
+.signalCornerMark {
+  position: absolute;
+  width: 56px;
+  height: 56px;
+  border-color: rgba(45, 212, 191, 0.45);
+}
+
+.signalCornerMarkTopLeft {
+  top: 36px;
+  left: 100px;
+  border-top: 2px solid;
+  border-left: 2px solid;
+}
+
+.signalCornerMarkTopRight {
+  top: 36px;
+  right: 36px;
+  border-top: 2px solid;
+  border-right: 2px solid;
+}
+
+.signalCornerMarkBottomLeft {
+  bottom: 36px;
+  left: 100px;
+  border-bottom: 2px solid;
+  border-left: 2px solid;
+}
+
+.signalCornerMarkBottomRight {
+  bottom: 36px;
+  right: 36px;
+  border-bottom: 2px solid;
+  border-right: 2px solid;
+}
+
+.signalSideRail {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 72px;
+  border-right: 1px solid rgba(45, 212, 191, 0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(90deg, rgba(6, 12, 12, 0.95), rgba(6, 12, 12, 0));
+  z-index: 1;
+}
+
+.signalSideRailText {
+  font-family: JetBrains Mono, ui-monospace, monospace;
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: rgba(94, 234, 212, 0.45);
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
+}
+
+.signalContentStack {
+  position: absolute;
+  inset: 0;
+  padding: 56px 48px 48px 108px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  z-index: 2;
+}
+
+.signalKickerLine {
+  margin: 0;
+  font-family: JetBrains Mono, ui-monospace, monospace;
+  font-weight: 500;
+  font-size: 20px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: rgba(148, 163, 184, 0.75);
+}
+
+.signalVenueWordmark {
+  margin: 16px 0 0;
+  font-family: Oswald, system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 132px;
+  line-height: 0.92;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #ecfdf5;
+  text-shadow: 0 0 40px rgba(45, 212, 191, 0.25), 0 2px 0 rgba(0, 0, 0, 0.8);
+}
+
+.signalEventSubtitle {
+  margin: 20px 0 0;
+  font-family: JetBrains Mono, ui-monospace, monospace;
+  font-weight: 500;
+  font-size: 22px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(45, 212, 191, 0.85);
+  max-width: 920px;
+  line-height: 1.35;
+}
+
+.signalLineupList {
+  list-style: none;
+  margin: 28px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+}
+
+.signalLineupRow {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 0;
+  align-items: stretch;
+  border: 1px solid rgba(45, 212, 191, 0.22);
+  background: rgba(15, 23, 20, 0.65);
+  border-left: 5px solid #2dd4bf;
+}
+
+.signalRowTimeColumn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  padding: 20px 18px;
+  border-right: 1px solid rgba(45, 212, 191, 0.15);
+  background: rgba(6, 10, 10, 0.9);
+}
+
+.signalDayMicro {
+  font-family: JetBrains Mono, ui-monospace, monospace;
+  font-size: 14px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(148, 163, 184, 0.65);
+}
+
+.signalClock {
+  font-family: JetBrains Mono, ui-monospace, monospace;
+  font-weight: 500;
+  font-size: 28px;
+  letter-spacing: 0.12em;
+  color: #5eead4;
+}
+
+.signalArtistName {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  padding: 18px 22px;
+  font-family: Archivo Black, system-ui, sans-serif;
+  font-size: 46px;
+  line-height: 1.05;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #f8fafc;
+}
+
+.signalFooterBlock {
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid rgba(45, 212, 191, 0.2);
+  display: grid;
+  gap: 14px;
+}
+
+.signalDisclaimer {
+  margin: 0;
+  font-family: JetBrains Mono, ui-monospace, monospace;
+  font-size: 15px;
+  line-height: 1.5;
+  color: rgba(148, 163, 184, 0.7);
+}
+
+.signalWebsiteFooter {
+  margin: 0;
+  font-family: Oswald, system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 32px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #2dd4bf;
+}
+
+.signalGrainOverlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  mix-blend-mode: overlay;
+  opacity: 0.38;
+}
+
+.posterInlineGrainSvg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+

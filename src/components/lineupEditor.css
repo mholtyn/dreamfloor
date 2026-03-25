@@ -1,0 +1,16 @@
+.lineupEditorRoot {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.lineupSlotRow {
+  display: grid;
+}
+
+.lineupHelp {
+  margin-top: 8px;
+  font-size: 12px;
+  opacity: 0.75;
+}
+
