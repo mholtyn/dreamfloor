@@ -1,73 +1,55 @@
-# React + TypeScript + Vite
+# Dreamfloor App (v1.0)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Dreamfloor** to kreator fanowskich techno lineupów: użytkownik wybiera styl (preset), wypełnia sloty artystami i eksportuje plakat jako **PNG** do pobrania / udostępnienia. Projekt ma **zero rejestracji** — a globalny licznik lineupów jest liczony tylko po udanym eksporcie.
 
-Currently, two official plugins are available:
+## Najważniejsze funkcje
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Wybór wizualnego **presetu** (ramy).
+- Edycja lineupów: `dzień + godzina` + **autocomplete** artystów.
+- Podgląd plakatu w tej samej strukturze, z której robiony jest eksport.
+- Eksport plakatu do **PNG** (z `html2canvas`).
+- **Share** (Web Share API z fallbackiem do pobrania pliku).
+- Globalny licznik przez `Vercel Functions` + `Upstash Redis`.
 
-## React Compiler
+## Szybki start
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Lokalnie
 
-## Expanding the ESLint configuration
+Wymagania: Node.js + npm.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. Przejdź do katalogu aplikacji:
+   - `cd dreamfloor-app`
+2. Uruchom dev server:
+   - `npm run dev`
+3. Produkcyjny build:
+   - `npm run build`
+4. Preview buildu:
+   - `npm run preview`
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Upstash (Vercel)
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Globalny licznik działa przez Upstash Redis. W ustawieniach środowiska w Vercel ustaw:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- `UPSTASH_REDIS_REST_URL`
+- `UPSTASH_REDIS_REST_TOKEN`
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Endpointy licznika
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Jedyny backendowy endpoint używany przez MVP:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- `GET /api/lineup-count` — odczyt globalnej liczby eksportów
+- `POST /api/lineup-count` — atomowy increment po udanym eksporcie
+
+Kod endpointu:
+- `api/lineup-count.js`
+
+## Produkcja (Vercel)
+
+1. Utwórz projekt na Vercel wskazując na katalog `dreamfloor-app`.
+2. Ustaw:
+   - Build Command: `npm run build`
+   - Output Directory: `dist`
+3. Dodaj zmienne środowiskowe Upstash (patrz sekcja wyżej).
+4. Po wdrożeniu sprawdź w przeglądarce / logach, czy działa:
+   - `GET /api/lineup-count`
+
