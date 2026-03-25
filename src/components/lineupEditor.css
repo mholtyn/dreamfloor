@@ -6,11 +6,88 @@
 
 .lineupSlotRow {
   display: grid;
+  grid-template-columns: 360px 1fr auto;
+  gap: 12px;
+  align-items: start;
+}
+
+.lineupSlotTimeControls {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.lineupTimeField {
+  display: grid;
+  gap: 6px;
+}
+
+.lineupTimeLabel {
+  font-size: 12px;
+  opacity: 0.75;
+}
+
+.lineupTimeInput {
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+  padding: 10px 12px;
+  outline: none;
+}
+
+.lineupTimeInput:focus {
+  border-color: rgba(125, 73, 255, 0.8);
+}
+
+.lineupDurationSelect {
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+  padding: 11px 12px;
+  outline: none;
+}
+
+.lineupSlotArtistControls {
+  min-width: 240px;
+}
+
+.lineupSlotRemoveControls {
+  display: flex;
+  align-items: flex-start;
+}
+
+.lineupAddControls {
+  margin-top: 4px;
 }
 
 .lineupHelp {
   margin-top: 8px;
   font-size: 12px;
   opacity: 0.75;
+}
+
+.secondaryButton {
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+.dangerButton {
+  border-radius: 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  background: rgba(239, 68, 68, 0.12);
+  color: inherit;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.dangerButton:hover {
+  background: rgba(239, 68, 68, 0.18);
+}
+
+.lineupSlotRemoveControls .dangerButton {
+  margin-top: 26px;
 }
 

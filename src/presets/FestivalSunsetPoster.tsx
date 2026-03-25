@@ -1,4 +1,5 @@
 import type { LineupSlot } from '../types';
+import { computeSlotTimeRangeLabel } from '../utils/time';
 
 import './festivalSunsetPoster.css';
 
@@ -42,11 +43,12 @@ export function FestivalSunsetPoster({
         </header>
 
         <ol className="festivalLineupList" aria-label="Lineup">
-          {lineupSlots.map((slot, slotIndex) => (
-            <li key={`${slot.slotTimeLabel}-${slotIndex}`} className="festivalLineupRow">
+           {lineupSlots.map((slot, slotIndex) => (
+             <li key={`${slot.slotStartTimeLabel}-${slot.slotDurationMinutes}-${slotIndex}`} className="festivalLineupRow">
               <div className="festivalRowTimeBlock">
-                <span className="festivalDayBadge">{slot.dayLabel}</span>
-                <span className="festivalClockLabel">{slot.slotTimeLabel}</span>
+                <span className="festivalClockLabel">
+                  {computeSlotTimeRangeLabel(slot.slotStartTimeLabel, slot.slotDurationMinutes)}
+                </span>
               </div>
               <div className="festivalRowArtistBlock">
                 <span className="festivalArtistName">{slot.selectedArtistName || '—'}</span>

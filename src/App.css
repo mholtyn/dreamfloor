@@ -224,16 +224,12 @@
 
 .appMain {
   display: grid;
-  grid-template-columns: 1fr 560px;
+  grid-template-columns: 1fr;
   gap: 18px;
   align-items: start;
 }
 
-@media (max-width: 1024px) {
-  .appMain {
-    grid-template-columns: 1fr;
-  }
-}
+/* stacked layout is the MVP default (controls + preview below) */
 
 .appControls {
   display: grid;

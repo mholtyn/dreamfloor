@@ -12,10 +12,10 @@ const posterDisclaimerText =
 const posterWebsiteFooterText = 'dreamfloor.io';
 
 const baseLineupSlots: LineupSlot[] = [
-  { dayLabel: 'FRI', slotTimeLabel: '23:00', selectedArtistName: '' },
-  { dayLabel: 'FRI', slotTimeLabel: '01:00', selectedArtistName: '' },
-  { dayLabel: 'SAT', slotTimeLabel: '03:00', selectedArtistName: '' },
-  { dayLabel: 'SAT', slotTimeLabel: '05:00', selectedArtistName: '' },
+  { slotStartTimeLabel: '23:00', slotDurationMinutes: 90, selectedArtistName: '' },
+  { slotStartTimeLabel: '01:00', slotDurationMinutes: 60, selectedArtistName: '' },
+  { slotStartTimeLabel: '03:00', slotDurationMinutes: 60, selectedArtistName: '' },
+  { slotStartTimeLabel: '05:00', slotDurationMinutes: 60, selectedArtistName: '' },
 ];
 
 async function fetchGlobalLineupCounter(): Promise<number> {

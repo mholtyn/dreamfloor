@@ -1,4 +1,5 @@
 import type { LineupSlot } from '../types';
+import { computeSlotTimeRangeLabel } from '../utils/time';
 
 import './signalIndustrialPoster.css';
 
@@ -48,10 +49,11 @@ export function SignalIndustrialPoster({
 
         <ol className="signalLineupList" aria-label="Lineup">
           {lineupSlots.map((slot, slotIndex) => (
-            <li key={`${slot.slotTimeLabel}-${slotIndex}`} className="signalLineupRow">
+            <li key={`${slot.slotStartTimeLabel}-${slot.slotDurationMinutes}-${slotIndex}`} className="signalLineupRow">
               <div className="signalRowTimeColumn">
-                <span className="signalDayMicro">{slot.dayLabel}</span>
-                <span className="signalClock">{slot.slotTimeLabel}</span>
+                <span className="signalClock">
+                  {computeSlotTimeRangeLabel(slot.slotStartTimeLabel, slot.slotDurationMinutes)}
+                </span>
               </div>
               <p className="signalArtistName">{slot.selectedArtistName || '—'}</p>
             </li>
