@@ -16,7 +16,7 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
       <h2 className="text-sm font-semibold">Live Preview</h2>
       <div
         id="poster-preview"
-        className="relative mx-auto aspect-3/4 w-full max-w-[280px] overflow-hidden rounded-lg shadow-2xl sm:max-w-[384px] lg:max-w-[448px]"
+        className="relative mx-auto aspect-3/4 w-full max-w-[280px] overflow-hidden rounded-lg shadow-2xl sm:max-w-[384px] lg:mx-0 lg:max-w-[448px]"
         style={{
           background: presetConfig.background,
           color: presetConfig.textColor,
@@ -24,14 +24,8 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
       >
         <div className="flex h-full flex-col justify-between p-5 sm:p-7 lg:p-9">
           <div>
-            <p
-              className="text-[0.55rem] font-semibold tracking-[0.25em] uppercase opacity-80 sm:text-[0.7rem]"
-              style={{ color: presetConfig.textColor }}
-            >
-              Fictional Event
-            </p>
             <h1
-              className="mt-2 text-3xl font-black leading-none tracking-tight uppercase sm:text-[2.8rem] lg:text-5xl"
+              className="text-3xl font-black leading-none tracking-tight uppercase sm:text-[2.8rem] lg:text-5xl"
               style={{
                 color: presetConfig.titleColor,
                 textShadow:
@@ -45,10 +39,10 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
               Floor
             </h1>
             <p
-              className="mt-2 text-[0.65rem] font-semibold tracking-widest uppercase sm:text-xs"
+              className="mt-1 text-[0.55rem] font-semibold tracking-[0.18em] uppercase opacity-80 sm:text-[0.7rem]"
               style={{ color: presetConfig.subtitleColor }}
             >
-              Techno Experience
+              Presented by Dreamfloor.app
             </p>
           </div>
 
@@ -102,14 +96,6 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
             )}
           </div>
 
-          <div
-            className="mt-4 border-t pt-2"
-            style={{ borderTopColor: `${presetConfig.textColor}33` }}
-          >
-            <p className="text-[0.55rem] tracking-widest uppercase opacity-60 sm:text-[0.7rem]">
-              Created with Dreamfloor
-            </p>
-          </div>
         </div>
       </div>
     </div>

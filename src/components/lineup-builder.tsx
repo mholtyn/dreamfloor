@@ -2,6 +2,12 @@ import { Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { ArtistAutocomplete } from "@/components/artist-autocomplete";
 import { TECHNO_ARTISTS } from "@/data/artists";
 import type { LineupSlot } from "@/types";
@@ -85,22 +91,39 @@ export function LineupBuilder({ lineupSlots, onSlotsChange }: LineupBuilderProps
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <h2 className="text-sm font-semibold">Lineup</h2>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleAddSlot}
-          disabled={isAddSlotDisabled}
-        >
-          <Plus className="size-3.5" />
-          Add Artist
-        </Button>
+        {hasReachedMaximumSlots ? (
+          <TooltipProvider delayDuration={150}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="inline-flex">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleAddSlot}
+                    disabled={isAddSlotDisabled}
+                  >
+                    <Plus className="size-3.5" />
+                    Add Artist
+                  </Button>
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Max artists reached for this poster.</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        ) : (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleAddSlot}
+            disabled={isAddSlotDisabled}
+          >
+            <Plus className="size-3.5" />
+            Add Artist
+          </Button>
+        )}
       </div>
-
-      {hasReachedMaximumSlots && (
-        <p className="text-xs text-muted-foreground">
-          Maximum lineup size for MVP is {MAXIMUM_SLOT_COUNT} artists.
-        </p>
-      )}
 
       {lineupSlots.length === 0 ? (
         <div className="rounded-lg border-2 border-dashed p-6 text-center">
