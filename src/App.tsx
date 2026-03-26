@@ -1,121 +1,70 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useState } from "react";
+import type { PresetId, LineupSlot } from "@/types";
+import { TopBar } from "@/components/top-bar";
+import { InfoModal } from "@/components/info-modal";
+import { PresetSelector } from "@/components/preset-selector";
+import { PosterPreview } from "@/components/poster-preview";
+import { LineupBuilder } from "@/components/lineup-builder";
+import { ExportActions } from "@/components/export-actions";
+
+const INITIAL_PRESET_ID: PresetId = "neon";
+
+const INITIAL_LINEUP_SLOTS: LineupSlot[] = [
+  { artistName: "Charlotte de Witte", durationMinutes: 120 },
+  { artistName: "Amelie Lens", durationMinutes: 90 },
+  { artistName: "Adam Beyer", durationMinutes: 120 },
+];
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  const [selectedPresetId, setSelectedPresetId] =
+    useState<PresetId>(INITIAL_PRESET_ID);
+  const [lineupSlots, setLineupSlots] =
+    useState<LineupSlot[]>(INITIAL_LINEUP_SLOTS);
+
+  const isLineupValid = lineupSlots.some(
+    (slot) => slot.artistName.trim().length > 0,
+  );
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="flex min-h-screen flex-col bg-background text-foreground">
+      <TopBar onInfoClick={() => setIsInfoModalOpen(true)} />
+      <InfoModal open={isInfoModalOpen} onOpenChange={setIsInfoModalOpen} />
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+      <main className="mx-auto w-full max-w-7xl flex-1 p-4 lg:grid lg:grid-cols-[minmax(300px,480px)_1fr] lg:gap-8 lg:p-8">
+        {/* Preview column (left on desktop, below controls on mobile) */}
+        <div className="hidden lg:block">
+          <div className="sticky top-20 self-start">
+            <PosterPreview
+              presetId={selectedPresetId}
+              lineupSlots={lineupSlots}
+            />
+          </div>
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+        {/* Controls column (right on desktop, top on mobile) */}
+        <div className="space-y-4 lg:space-y-6">
+          <PresetSelector
+            selectedPresetId={selectedPresetId}
+            onSelectPreset={setSelectedPresetId}
+          />
+          <LineupBuilder
+            lineupSlots={lineupSlots}
+            onSlotsChange={setLineupSlots}
+          />
+          <ExportActions isLineupValid={isLineupValid} />
+        </div>
+
+        {/* Preview on mobile (below controls) */}
+        <div className="mt-6 lg:hidden">
+          <PosterPreview
+            presetId={selectedPresetId}
+            lineupSlots={lineupSlots}
+          />
+        </div>
+      </main>
+    </div>
+  );
 }
 
-export default App
+export default App;
