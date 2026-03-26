@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Download, Share2, Check, Loader2 } from "lucide-react";
+import { Check, Download, Loader2, Share2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,7 +28,7 @@ export function ExportActions({ isLineupValid }: ExportActionsProps) {
       }
       downloadBlob(posterBlob);
       setExportSucceeded(true);
-      toast.success("Poster exported!");
+      toast.success("PNG downloaded.");
       setTimeout(() => setExportSucceeded(false), 3000);
     } catch {
       toast.error("Export failed. Please try again.");
@@ -45,14 +45,21 @@ export function ExportActions({ isLineupValid }: ExportActionsProps) {
         toast.error("Failed to capture poster. Try again.");
         return;
       }
-      const didShare = await sharePosterBlob(posterBlob);
-      if (didShare) {
+
+      const shareOutcome = await sharePosterBlob(posterBlob);
+      if (shareOutcome === "shared_via_native_dialog") {
         setShareSucceeded(true);
-        toast.success("Shared successfully!");
+        toast.success("Shared via native share dialog.");
         setTimeout(() => setShareSucceeded(false), 3000);
-      } else {
-        toast.error("Could not share. Link copied to clipboard instead.");
+        return;
       }
+
+      if (shareOutcome === "downloaded_as_fallback") {
+        toast.message("Native share not available. PNG downloaded instead.");
+        return;
+      }
+
+      toast.error("Share failed. Please try again.");
     } catch {
       toast.error("Share failed. Please try again.");
     } finally {
@@ -75,11 +82,7 @@ export function ExportActions({ isLineupValid }: ExportActionsProps) {
         ) : (
           <Download className="size-4" />
         )}
-        {isExporting
-          ? "Exporting..."
-          : exportSucceeded
-            ? "Exported!"
-            : "Export PNG"}
+        {isExporting ? "Exporting..." : exportSucceeded ? "Exported!" : "Export PNG"}
       </Button>
 
       <Button
@@ -104,6 +107,11 @@ export function ExportActions({ isLineupValid }: ExportActionsProps) {
           Add at least one artist to enable export
         </p>
       )}
+
+      <p className="text-center text-[11px] text-muted-foreground">
+        Export always downloads PNG. Share uses native share when available.
+      </p>
     </div>
   );
 }
+

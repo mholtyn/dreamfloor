@@ -4,6 +4,11 @@ const POSTER_ELEMENT_ID = "poster-preview";
 const EXPORT_SCALE = 2;
 const EXPORT_FILENAME = "dreamfloor-poster.png";
 
+export type ShareOutcome =
+  | "shared_via_native_dialog"
+  | "downloaded_as_fallback"
+  | "failed";
+
 export async function capturePosterAsBlob(): Promise<Blob | null> {
   const posterElement = document.getElementById(POSTER_ELEMENT_ID);
   if (!posterElement) return null;
@@ -15,10 +20,7 @@ export async function capturePosterAsBlob(): Promise<Blob | null> {
   });
 
   return new Promise((resolve) => {
-    canvas.toBlob(
-      (blob) => resolve(blob),
-      "image/png",
-    );
+    canvas.toBlob((blob) => resolve(blob), "image/png");
   });
 }
 
@@ -33,25 +35,23 @@ export function downloadBlob(blob: Blob): void {
   URL.revokeObjectURL(downloadUrl);
 }
 
-export async function sharePosterBlob(blob: Blob): Promise<boolean> {
-  if (navigator.share) {
-    try {
-      const posterFile = new File([blob], EXPORT_FILENAME, { type: "image/png" });
-      await navigator.share({
-        files: [posterFile],
-        title: "Dreamfloor Lineup",
-        text: "Check out my fictional techno lineup! Created with dreamfloor.io",
-      });
-      return true;
-    } catch {
-      // User cancelled or share failed — fall through to clipboard
-    }
+export async function sharePosterBlob(blob: Blob): Promise<ShareOutcome> {
+  if (!navigator.share) {
+    downloadBlob(blob);
+    return "downloaded_as_fallback";
   }
 
   try {
-    await navigator.clipboard.writeText(window.location.href);
-    return true;
+    const posterFile = new File([blob], EXPORT_FILENAME, { type: "image/png" });
+    await navigator.share({
+      files: [posterFile],
+      title: "Dreamfloor Lineup",
+      text: "Check out my fictional techno lineup! Created with dreamfloor.io",
+    });
+    return "shared_via_native_dialog";
   } catch {
-    return false;
+    downloadBlob(blob);
+    return "downloaded_as_fallback";
   }
 }
+

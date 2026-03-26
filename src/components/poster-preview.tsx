@@ -9,9 +9,7 @@ type PosterPreviewProps = {
 
 export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
   const presetConfig = getPresetConfigById(presetId);
-  const hasAnyArtist = lineupSlots.some(
-    (slot) => slot.artistName.trim().length > 0,
-  );
+  const hasAnyArtist = lineupSlots.some((slot) => slot.artistName.trim().length > 0);
 
   return (
     <div className="space-y-3">
@@ -25,7 +23,6 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
         }}
       >
         <div className="flex h-full flex-col justify-between p-5 sm:p-7 lg:p-9">
-          {/* Header */}
           <div>
             <p
               className="text-[0.55rem] font-semibold tracking-[0.25em] uppercase opacity-80 sm:text-[0.7rem]"
@@ -55,16 +52,17 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
             </p>
           </div>
 
-          {/* Lineup */}
           <div className="mt-4 flex-1">
             {hasAnyArtist ? (
               <ul className="space-y-2 sm:space-y-3">
                 {lineupSlots.map((slot, slotIndex) => {
-                  const displayName =
-                    slot.artistName.trim() || "TBA";
-                  const { startTimeLabel, endTimeLabel } =
-                    computeSlotTimeRange(slotIndex, lineupSlots);
+                  const displayName = slot.artistName.trim() || "TBA";
+                  const { startTimeLabel, endTimeLabel } = computeSlotTimeRange(
+                    slotIndex,
+                    lineupSlots,
+                  );
                   const slotNumber = String(slotIndex + 1).padStart(2, "0");
+                  const isAllNightLongSlot = slot.durationMinutes === 0;
 
                   return (
                     <li
@@ -89,7 +87,9 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
                         className="mt-0.5 pl-5 text-[0.6rem] font-semibold sm:pl-6 sm:text-xs"
                         style={{ color: presetConfig.secondaryTextColor }}
                       >
-                        {startTimeLabel} - {endTimeLabel}
+                        {isAllNightLongSlot
+                          ? "All night long"
+                          : `${startTimeLabel} - ${endTimeLabel}`}
                       </p>
                     </li>
                   );
@@ -102,7 +102,6 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
             )}
           </div>
 
-          {/* Footer */}
           <div
             className="mt-4 border-t pt-2"
             style={{ borderTopColor: `${presetConfig.textColor}33` }}
@@ -116,3 +115,4 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
     </div>
   );
 }
+

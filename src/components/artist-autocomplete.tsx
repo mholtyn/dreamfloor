@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { TECHNO_ARTISTS } from "@/data/artists";
 import { cn } from "@/lib/utils";
@@ -27,6 +27,8 @@ export function ArtistAutocomplete({
         ).slice(0, MAX_VISIBLE_SUGGESTIONS)
       : [];
 
+  const shouldShowSuggestions = isSuggestionsOpen && filteredSuggestions.length > 0;
+
   function handleFocus() {
     if (blurTimeoutRef.current) {
       clearTimeout(blurTimeoutRef.current);
@@ -46,8 +48,22 @@ export function ArtistAutocomplete({
     setIsSuggestionsOpen(false);
   }
 
-  const shouldShowSuggestions =
-    isSuggestionsOpen && filteredSuggestions.length > 0;
+  if (!shouldShowSuggestions) {
+    return (
+      <div className="relative">
+        <Input
+          type="text"
+          value={value}
+          onChange={(event) => onChangeArtistName(event.target.value)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          placeholder={placeholder}
+          className="w-full"
+          autoComplete="off"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="relative">
@@ -62,28 +78,27 @@ export function ArtistAutocomplete({
         autoComplete="off"
       />
 
-      {shouldShowSuggestions && (
-        <ul className="absolute top-full right-0 left-0 z-30 mt-1 max-h-48 overflow-auto rounded-lg border bg-popover shadow-lg">
-          {filteredSuggestions.map((artistName) => (
-            <li key={artistName}>
-              <button
-                type="button"
-                className={cn(
-                  "w-full px-3 py-2 text-left text-sm hover:bg-accent",
-                  artistName.toLowerCase() === normalizedInputValue &&
-                    "bg-accent font-medium",
-                )}
-                onMouseDown={(event) => {
-                  event.preventDefault();
-                  handleSelectSuggestion(artistName);
-                }}
-              >
-                {artistName}
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
+      <ul className="absolute top-full right-0 left-0 z-30 mt-1 max-h-48 overflow-auto rounded-lg border bg-popover shadow-lg">
+        {filteredSuggestions.map((artistName) => (
+          <li key={artistName}>
+            <button
+              type="button"
+              className={cn(
+                "w-full px-3 py-2 text-left text-sm hover:bg-accent",
+                artistName.toLowerCase() === normalizedInputValue &&
+                  "bg-accent font-medium",
+              )}
+              onMouseDown={(event) => {
+                event.preventDefault();
+                handleSelectSuggestion(artistName);
+              }}
+            >
+              {artistName}
+            </button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
+
