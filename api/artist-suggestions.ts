@@ -1,6 +1,6 @@
-import { Redis } from "@upstash/redis"
+import { Redis } from "@upstash/redis";
 
-const redisClietn = Redis.fromEnv();
+const redisClient = Redis.fromEnv({ enableAutoPipelining: false });
 
 const suggestionHashKeyPrefix = "dreamfloor:artist_suggestion:";
 const suggestionSortedSetKey = "dreamfloor:artist_suggestion_by_count";
@@ -66,19 +66,19 @@ export default async function handler(req: Request): Promise<Response> {
     const normalizedArtistName = normalizeArtistName(validatedArtistName);
     const suggestionHashKey = `${suggestionHashKeyPrefix}${normalizedArtistName}`;
 
-    const nextSuggestionCount = await redisClietn.hincrby(
+    const nextSuggestionCount = await redisClient.hincrby(
         suggestionHashKey,
         "count",
         1,
     );
 
-    await redisClietn.hset(suggestionHashKey, {
+    await redisClient.hset(suggestionHashKey, {
         latestOriginalName: validatedArtistName,
         normalizedName: normalizedArtistName,
         updatedAtIso: new Date().toISOString(),
     });
 
-    await redisClietn.zadd(suggestionSortedSetKey, {
+    await redisClient.zadd(suggestionSortedSetKey, {
         score: Number(nextSuggestionCount),
         member: normalizedArtistName,
     });

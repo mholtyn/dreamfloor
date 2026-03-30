@@ -1,6 +1,6 @@
 import { Redis } from "@upstash/redis";
 
-const redisClient = Redis.fromEnv();
+const redisClient = Redis.fromEnv({ enableAutoPipelining: false });
 
 const globalCounterKey = "dreamfloor:global_lineup_counter";
 
@@ -16,7 +16,8 @@ function jsonResponse(body: unknown, status: number = 200): Response {
 
 export default async function handler(req: Request): Promise<Response> {
   if (req.method === "GET") {
-    const currentCount = (await redisClient.get<number>(globalCounterKey)) ?? 0;
+    const currentCount =
+      (await redisClient.get<number>(globalCounterKey)) ?? 0;
     return jsonResponse({ count: currentCount });
   }
 
