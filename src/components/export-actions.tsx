@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Check, Download, Loader2, Share2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { incrementLineupCount } from "@/lib/dreamfloorApi";
 import {
   capturePosterAsBlob,
   downloadBlob,
@@ -10,9 +11,13 @@ import {
 
 type ExportActionsProps = {
   isLineupValid: boolean;
+  onLineupCountIncremented?: (nextLineupCount: number) => void;
 };
 
-export function ExportActions({ isLineupValid }: ExportActionsProps) {
+export function ExportActions({
+  isLineupValid,
+  onLineupCountIncremented,
+}: ExportActionsProps) {
   const [isExporting, setIsExporting] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
   const [exportSucceeded, setExportSucceeded] = useState(false);
@@ -27,6 +32,12 @@ export function ExportActions({ isLineupValid }: ExportActionsProps) {
         return;
       }
       downloadBlob(posterBlob);
+      try {
+        const incrementedLineupCount = await incrementLineupCount();
+        onLineupCountIncremented?.(incrementedLineupCount);
+      } catch {
+        toast.message("PNG exported, but global counter update failed.");
+      }
       setExportSucceeded(true);
       toast.success("PNG downloaded.");
       setTimeout(() => setExportSucceeded(false), 3000);

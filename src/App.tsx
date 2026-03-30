@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ExportActions } from "@/components/export-actions";
 import { InfoModal } from "@/components/info-modal";
 import { LineupBuilder } from "@/components/lineup-builder";
 import { PosterPreview } from "@/components/poster-preview";
 import { PresetSelector } from "@/components/preset-selector";
 import { TopBar } from "@/components/top-bar";
+import { fetchLineupCount } from "@/lib/dreamfloorApi";
 import type { LineupSlot, PresetId } from "@/types";
 
 const INITIAL_PRESET_ID: PresetId = "neon";
@@ -18,12 +19,29 @@ function App() {
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [selectedPresetId, setSelectedPresetId] = useState<PresetId>(INITIAL_PRESET_ID);
   const [lineupSlots, setLineupSlots] = useState<LineupSlot[]>(INITIAL_LINEUP_SLOTS);
+  const [globalLineupCount, setGlobalLineupCount] = useState<number | null>(null);
 
   const isLineupValid = lineupSlots.some((slot) => slot.artistName.trim().length > 0);
 
+  useEffect(() => {
+    async function loadLineupCount(): Promise<void> {
+      try {
+        const fetchedLineupCount = await fetchLineupCount();
+        setGlobalLineupCount(fetchedLineupCount);
+      } catch {
+        setGlobalLineupCount(null);
+      }
+    }
+
+    void loadLineupCount();
+  }, []);
+
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
-      <TopBar onInfoClick={() => setIsInfoModalOpen(true)} />
+      <TopBar
+        onInfoClick={() => setIsInfoModalOpen(true)}
+        globalLineupCount={globalLineupCount}
+      />
       <InfoModal open={isInfoModalOpen} onOpenChange={setIsInfoModalOpen} />
 
       <main className="mx-auto w-full max-w-7xl flex-1 p-4 lg:grid lg:grid-cols-[minmax(300px,480px)_1fr] lg:items-start lg:gap-8 lg:p-8">
@@ -33,7 +51,10 @@ function App() {
             onSelectPreset={setSelectedPresetId}
           />
           <LineupBuilder lineupSlots={lineupSlots} onSlotsChange={setLineupSlots} />
-          <ExportActions isLineupValid={isLineupValid} />
+          <ExportActions
+            isLineupValid={isLineupValid}
+            onLineupCountIncremented={setGlobalLineupCount}
+          />
         </div>
 
         <div className="order-2 mt-6 lg:order-1 lg:mt-0 lg:self-start">

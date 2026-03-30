@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/tooltip";
 import { ArtistAutocomplete } from "@/components/artist-autocomplete";
 import { TECHNO_ARTISTS } from "@/data/artists";
+import { suggestArtist } from "@/lib/dreamfloorApi";
 import type { LineupSlot } from "@/types";
 
 const MINIMUM_SLOT_COUNT = 1;
@@ -81,10 +82,13 @@ export function LineupBuilder({ lineupSlots, onSlotsChange }: LineupBuilderProps
     );
   }
 
-  function handleSuggestArtist(artistName: string) {
-    toast.message(`Suggestion captured: ${artistName}`, {
-      description: "UI-only for MVP. API integration will come next.",
-    });
+  async function handleSuggestArtist(artistName: string): Promise<void> {
+    try {
+      const suggestionCount = await suggestArtist(artistName);
+      toast.success(`Thanks! "${artistName}" suggested (${suggestionCount} total).`);
+    } catch {
+      toast.error("Failed to send suggestion. Try again.");
+    }
   }
 
   return (

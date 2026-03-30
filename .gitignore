@@ -28,3 +28,5 @@ reference
 
 # env
 .env.*
+.vercel
+.env*.local
