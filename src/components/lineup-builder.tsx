@@ -12,8 +12,10 @@ import { ArtistAutocomplete } from "@/components/artist-autocomplete";
 import { TECHNO_ARTISTS } from "@/data/artists";
 import { suggestArtist } from "@/lib/dreamfloorApi";
 import type { LineupSlot } from "@/types";
+import { ALL_NIGHT_LONG_DURATION_MINUTES_SENTINEL } from "@/utils/time";
 
-const MINIMUM_SLOT_COUNT = 1;
+/** MVP: lineup must stay at least this many slots (no single-artist night without ANL). */
+export const MINIMUM_LINEUP_SLOT_COUNT = 2;
 const MAXIMUM_SLOT_COUNT = 5;
 const DEFAULT_DURATION_MINUTES = 120;
 
@@ -27,8 +29,16 @@ const DURATION_OPTIONS = [
   { value: 360, label: "6h" },
   { value: 420, label: "7h" },
   { value: 480, label: "8h" },
-  { value: 0, label: "All night long" },
+  // Post-MVP: append `{ value: ALL_NIGHT_LONG_DURATION_MINUTES_SENTINEL, label: "All night long" }` for a visible ANL choice.
 ] as const;
+
+/** ANL (`0`) is not in the dropdown; we show default minutes until the user picks another duration. */
+function durationMinutesForSelectDisplay(durationMinutes: number): number {
+  if (durationMinutes === ALL_NIGHT_LONG_DURATION_MINUTES_SENTINEL) {
+    return DEFAULT_DURATION_MINUTES;
+  }
+  return durationMinutes;
+}
 
 type LineupBuilderProps = {
   lineupSlots: LineupSlot[];
@@ -37,13 +47,21 @@ type LineupBuilderProps = {
 
 export function LineupBuilder({ lineupSlots, onSlotsChange }: LineupBuilderProps) {
   const hasAllNightLongSlot = lineupSlots.some(
-    (lineupSlot) => lineupSlot.durationMinutes === 0,
+    (lineupSlot) => lineupSlot.durationMinutes === ALL_NIGHT_LONG_DURATION_MINUTES_SENTINEL,
   );
   const hasReachedMaximumSlots = lineupSlots.length >= MAXIMUM_SLOT_COUNT;
   const isAddSlotDisabled = hasReachedMaximumSlots || hasAllNightLongSlot;
+  const canRemoveAnySlot = lineupSlots.length > MINIMUM_LINEUP_SLOT_COUNT;
 
   function handleAddSlot() {
     if (isAddSlotDisabled) return;
+    if (lineupSlots.length === 0) {
+      onSlotsChange([
+        { artistName: "", durationMinutes: DEFAULT_DURATION_MINUTES },
+        { artistName: "", durationMinutes: DEFAULT_DURATION_MINUTES },
+      ]);
+      return;
+    }
     onSlotsChange([
       ...lineupSlots,
       { artistName: "", durationMinutes: DEFAULT_DURATION_MINUTES },
@@ -51,6 +69,9 @@ export function LineupBuilder({ lineupSlots, onSlotsChange }: LineupBuilderProps
   }
 
   function handleRemoveSlot(removeIndex: number) {
+    if (lineupSlots.length <= MINIMUM_LINEUP_SLOT_COUNT) {
+      return;
+    }
     onSlotsChange(
       lineupSlots.filter((_, slotIndex) => slotIndex !== removeIndex),
     );
@@ -65,11 +86,12 @@ export function LineupBuilder({ lineupSlots, onSlotsChange }: LineupBuilderProps
   }
 
   function handleDurationChange(slotIndex: number, nextDuration: number) {
-    if (nextDuration === 0) {
+    // Post-MVP: when ANL is selectable again, this collapses to a single ANL slot (same as before).
+    if (nextDuration === ALL_NIGHT_LONG_DURATION_MINUTES_SENTINEL) {
       const selectedSlot = lineupSlots[slotIndex];
       const onlyAllNightLongSlot: LineupSlot = {
         artistName: selectedSlot.artistName,
-        durationMinutes: 0,
+        durationMinutes: ALL_NIGHT_LONG_DURATION_MINUTES_SENTINEL,
       };
       onSlotsChange([onlyAllNightLongSlot]);
       return;
@@ -176,7 +198,7 @@ export function LineupBuilder({ lineupSlots, onSlotsChange }: LineupBuilderProps
                   <div className="flex-1">
                     <Label className="text-xs">Duration</Label>
                     <select
-                      value={slot.durationMinutes}
+                      value={durationMinutesForSelectDisplay(slot.durationMinutes)}
                       onChange={(event) =>
                         handleDurationChange(slotIndex, Number(event.target.value))
                       }
@@ -190,7 +212,7 @@ export function LineupBuilder({ lineupSlots, onSlotsChange }: LineupBuilderProps
                     </select>
                   </div>
 
-                  {lineupSlots.length > MINIMUM_SLOT_COUNT && (
+                  {canRemoveAnySlot ? (
                     <Button
                       variant="ghost"
                       size="icon"
@@ -200,6 +222,31 @@ export function LineupBuilder({ lineupSlots, onSlotsChange }: LineupBuilderProps
                       <Trash2 className="size-4" />
                       <span className="sr-only">Remove slot {slotIndex + 1}</span>
                     </Button>
+                  ) : (
+                    <TooltipProvider delayDuration={150}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="inline-flex">
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              disabled
+                              className="text-destructive/40"
+                              aria-label="Cannot remove: minimum lineup size"
+                            >
+                              <Trash2 className="size-4" />
+                            </Button>
+                          </span>
+                        </TooltipTrigger>
+                        <TooltipContent className="max-w-xs">
+                          <p>
+                            At least {MINIMUM_LINEUP_SLOT_COUNT} artists are required. Support for
+                            All Night Longs will be added soon!
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   )}
                 </div>
               </div>

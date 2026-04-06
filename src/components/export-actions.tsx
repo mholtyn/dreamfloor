@@ -115,7 +115,7 @@ export function ExportActions({
 
       {!isLineupValid && (
         <p className="text-center text-xs text-muted-foreground">
-          Add at least one artist to enable export
+          Add at least two artists to enable export
         </p>
       )}
 

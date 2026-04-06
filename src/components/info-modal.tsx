@@ -38,7 +38,7 @@ export function InfoModal({ open, onOpenChange }: InfoModalProps) {
             <h3 className="mb-1 font-semibold">How to Use</h3>
             <ol className="list-inside list-decimal space-y-1 text-muted-foreground">
               <li>Choose a poster style from the preset gallery</li>
-              <li>Add artists and set durations for each slot</li>
+              <li>Add at least two artists and set durations for each slot</li>
               <li>Preview your poster live on the left</li>
               <li>Export as PNG or share directly</li>
             </ol>

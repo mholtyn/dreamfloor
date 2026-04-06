@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ExportActions } from "@/components/export-actions";
 import { InfoModal } from "@/components/info-modal";
-import { LineupBuilder } from "@/components/lineup-builder";
+import { LineupBuilder, MINIMUM_LINEUP_SLOT_COUNT } from "@/components/lineup-builder";
 import { PosterPreview } from "@/components/poster-preview";
 import { PresetSelector } from "@/components/preset-selector";
 import { TopBar } from "@/components/top-bar";
@@ -21,7 +21,10 @@ function App() {
   const [lineupSlots, setLineupSlots] = useState<LineupSlot[]>(INITIAL_LINEUP_SLOTS);
   const [globalLineupCount, setGlobalLineupCount] = useState<number | null>(null);
 
-  const isLineupValid = lineupSlots.some((slot) => slot.artistName.trim().length > 0);
+  const filledArtistCount = lineupSlots.filter(
+    (slot) => slot.artistName.trim().length > 0,
+  ).length;
+  const isLineupValid = filledArtistCount >= MINIMUM_LINEUP_SLOT_COUNT;
 
   useEffect(() => {
     async function loadLineupCount(): Promise<void> {

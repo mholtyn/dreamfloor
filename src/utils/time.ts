@@ -1,5 +1,10 @@
 const MINUTES_IN_DAY = 1440;
 const DEFAULT_FIRST_SLOT_START_MINUTES = 23 * 60;
+
+/** `durationMinutes === 0` marks an all-night-long slot (MVP: not selectable in lineup UI). */
+export const ALL_NIGHT_LONG_DURATION_MINUTES_SENTINEL = 0;
+
+/** Timeline length when a slot is all-night-long. Kept for post-MVP UI. */
 const ALL_NIGHT_LONG_DURATION_MINUTES = 8 * 60;
 
 export function formatMinutesAsTimeLabel(totalMinutes: number): string {
@@ -10,8 +15,12 @@ export function formatMinutesAsTimeLabel(totalMinutes: number): string {
   return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
 }
 
+/**
+ * `durationMinutes === 0` means "all night long" (not a zero-length set).
+ * MVP: users cannot pick this in the lineup UI; logic remains for poster + timeline.
+ */
 function normalizeDurationForTimeline(durationMinutes: number): number {
-  if (durationMinutes === 0) {
+  if (durationMinutes === ALL_NIGHT_LONG_DURATION_MINUTES_SENTINEL) {
     return ALL_NIGHT_LONG_DURATION_MINUTES;
   }
   return durationMinutes;
@@ -38,4 +47,3 @@ export function computeSlotTimeRange(
     endTimeLabel: formatMinutesAsTimeLabel(endMinutes),
   };
 }
-
