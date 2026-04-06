@@ -4,7 +4,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-  DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
@@ -16,7 +15,7 @@ type InfoModalProps = {
 export function InfoModal({ open, onOpenChange }: InfoModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md gap-4 sm:gap-4">
         <DialogHeader>
           <DialogTitle>About Dreamfloor</DialogTitle>
           <DialogDescription>
@@ -62,11 +61,14 @@ export function InfoModal({ open, onOpenChange }: InfoModalProps) {
           </section>
         </div>
 
-        <DialogFooter>
+        <div className="flex flex-col gap-1">
           <Button className="w-full" onClick={() => onOpenChange(false)}>
             Got it!
           </Button>
-        </DialogFooter>
+          <p className="w-full text-center text-[0.625rem] leading-relaxed text-muted-foreground/55 sm:text-[0.6875rem]">
+            Made with love and maintained in spare time.
+          </p>
+        </div>
       </DialogContent>
     </Dialog>
   );

@@ -28,3 +28,7 @@ pnpm dev
 | `pnpm build` | `tsc -b` + static production build → `dist/` |
 | `pnpm preview` | Serves `dist/` only (`/api/*` does not run — see DEV.md) |
 | `pnpm lint` | ESLint |
+
+## Feedback
+
+For bugs and ideas, open an issue via the **Issues** tab on this project’s GitHub repository.
