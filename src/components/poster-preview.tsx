@@ -471,7 +471,7 @@ function getLineupItemClassNames(
     case "minimal-hairline":
       return cn(flexBasis, "border-b border-black/20 pb-2 last:border-b-0");
     case "prime-arrow-list":
-      return cn(flexBasis, "mb-1 last:mb-0");
+      return cn(flexBasis, "mb-2.5 last:mb-0");
     case "default-underline":
     default:
       return cn(
@@ -613,16 +613,16 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
                     >
                       {presetConfig.lineupRhythmKind === "prime-arrow-list" ? (
                         <div className="flex items-baseline gap-2">
-                          <span className="text-[0.88rem] font-bold uppercase tracking-wide sm:text-[1.05rem] lg:text-lg">
+                          <span className="text-[1rem] font-bold uppercase tracking-wide sm:text-[1.2rem] lg:text-xl">
                             {displayName}
                           </span>
                           <span
-                            className="flex-1 border-b border-dotted opacity-20"
+                            className="flex-1 border-b border-dotted opacity-35"
                             style={{ borderColor: presetConfig.textColor }}
                           />
                           <span
-                            className="shrink-0 font-sans text-[0.55rem] tabular-nums tracking-wider sm:text-[0.65rem]"
-                            style={{ color: presetConfig.secondaryTextColor }}
+                            className="shrink-0 font-sans text-[0.6rem] font-semibold tabular-nums tracking-wider sm:text-[0.72rem]"
+                            style={{ color: presetConfig.textColor, opacity: 0.7 }}
                           >
                             {isAllNightLongSlot
                               ? "ALL NIGHT"

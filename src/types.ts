@@ -1,14 +1,9 @@
 export type PresetId =
-  | "neon"
   | "minimal"
-  | "dark-rave"
-  | "retro"
   | "gradient"
   | "industrial"
   | "prime"
-  | "minimal-grid"
-  | "sunset"
-  | "pulse";
+  | "sunset";
 
 export type LineupSlot = {
   artistName: string;
