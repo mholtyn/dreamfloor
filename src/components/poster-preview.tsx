@@ -669,8 +669,8 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
                     >
                       {presetConfig.lineupRhythmKind === "gradient-diagonal-list" ? (
                         <div className={cn(
-                          "flex items-baseline gap-3",
-                          slotIndex % 2 === 0 ? "justify-start" : "flex-row-reverse justify-start text-right",
+                          "flex flex-col",
+                          slotIndex % 2 === 0 ? "items-start" : "items-end",
                         )}>
                           <span
                             className="font-extrabold uppercase tracking-wider"
@@ -684,7 +684,7 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
                             {displayName}
                           </span>
                           <span
-                            className="shrink-0 font-sans text-[0.5rem] font-medium uppercase tabular-nums tracking-widest opacity-50 sm:text-[0.6rem]"
+                            className="font-sans text-[0.5rem] font-medium uppercase tabular-nums tracking-widest opacity-50 sm:text-[0.6rem]"
                             style={{ color: presetConfig.secondaryTextColor }}
                           >
                             {isAllNightLongSlot
