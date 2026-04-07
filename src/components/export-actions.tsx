@@ -41,7 +41,8 @@ export function ExportActions({
       setExportSucceeded(true);
       toast.success("PNG downloaded.");
       setTimeout(() => setExportSucceeded(false), 3000);
-    } catch {
+    } catch (exportError) {
+      console.error("[ExportActions] export failed:", exportError);
       toast.error("Export failed. Please try again.");
     } finally {
       setIsExporting(false);

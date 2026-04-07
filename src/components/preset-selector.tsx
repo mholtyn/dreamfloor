@@ -1,5 +1,5 @@
 import { Check } from "lucide-react";
-import { PRESET_CONFIGS } from "@/data/presets";
+import { PRESET_CONFIGS } from "../data/presets";
 import type { PresetId } from "@/types";
 import { cn } from "@/lib/utils";
 

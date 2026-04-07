@@ -1,4 +1,4 @@
-import html2canvas from "html2canvas";
+import { toBlob } from "html-to-image";
 
 const POSTER_ELEMENT_ID = "poster-preview";
 const EXPORT_SCALE = 2;
@@ -13,15 +13,12 @@ export async function capturePosterAsBlob(): Promise<Blob | null> {
   const posterElement = document.getElementById(POSTER_ELEMENT_ID);
   if (!posterElement) return null;
 
-  const canvas = await html2canvas(posterElement, {
-    scale: EXPORT_SCALE,
-    backgroundColor: null,
-    useCORS: true,
+  const blob = await toBlob(posterElement, {
+    pixelRatio: EXPORT_SCALE,
+    cacheBust: true,
   });
 
-  return new Promise((resolve) => {
-    canvas.toBlob((blob) => resolve(blob), "image/png");
-  });
+  return blob ?? null;
 }
 
 export function downloadBlob(blob: Blob): void {

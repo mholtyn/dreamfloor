@@ -120,75 +120,120 @@ Dreamfloor is a clean, modern one-page web application for creating fictional te
 
 ---
 
-## Visual Presets (5 Styles)
+## Poster presets — moodboards & visual direction
 
-### 1. Neon
-```
-Background: Linear gradient (135deg)
-  - From: #0F0326 (deep purple)
-  - To: #1a0540 (dark purple)
-Primary: #FF10F0 (hot pink)
-Secondary: #00F0FF (cyan)
-Accent: #FFD700 (gold)
-Text: #FFFFFF (white)
+Target lineup: **Industrial**, **Prime**, **Minimal**, **Sunset**, **Pulse**.  
+Reference images live in the repo under **`reference-posters/<preset-id>/`** (local only; not shipped in the app bundle). Use them for **mood and token choices**, not pixel-perfect copies.
 
-Special effects:
-- Text glow on title (0 0 20px primary color)
-- Animated pulsing dots (2px, top-right & bottom-left)
-```
+Implementation should stay **data-driven** (`PresetConfig` in `src/data/presets.ts`) with **one** shared `PosterPreview` layout unless a preset truly needs a different DOM structure.
 
-### 2. Minimal
-```
-Background: #FFFFFF (white)
-Primary: #000000 (black)
-Secondary: #666666 (gray)
-Accent: #333333 (dark gray)
-Text: #000000 (black)
+---
 
-Special effects: None (clean, simple)
-```
+### Preset: Industrial
 
-### 3. Dark Rave
-```
-Background: #000000 (black)
-Primary: #FF0000 (red)
-Secondary: #FFFFFF (white)
-Accent: #FF3333 (light red)
-Text: #FFFFFF (white)
+**Intent:** Hard techno / warehouse — technical, cold, structured. Feels like a signal, a blueprint, or a terminal — not a beach party.
 
-Special effects:
-- Radial gradient overlay at center (10% opacity)
-```
+**Moodboard (from references):**
 
-### 4. Retro
-```
-Background: Linear gradient (180deg)
-  - From: #FF6B35 (orange)
-  - To: #F7931E (amber)
-Primary: #2D1B69 (purple)
-Secondary: #FFFFFF (white)
-Accent: #FFE66D (yellow)
-Text: #2D1B69 (purple)
+- Near-black or charcoal base; **one dominant cool accent** (steel blue, cyan, or icy blue) for blocks, rules, and key type.
+- **Modular layout**: geometric shapes, strict alignment, optional subtle grid or “HUD” framing (corner brackets, thin rules).
+- Typography: **bold condensed sans** for the title; **clean sans** for lineup; optional **monospace** for meta lines (dates, labels).
+- High contrast; **matte** or lightly **noisy** finish acceptable; avoid pastel warmth.
 
-Special effects:
-- Horizontal bars (4px) at top and bottom
-  - Top: Primary color
-  - Bottom: Secondary color
-```
+**Implementation notes:**
 
-### 5. Gradient
-```
-Background: Linear gradient (135deg)
-  - From: #667EEA (blue)
-  - Via: #764BA2 (purple, 50%)
-  - To: #F093FB (pink)
-Primary: #FFFFFF (white)
-Secondary: #F0F0F0 (light gray)
-Accent: #FFE66D (yellow)
-Text: #FFFFFF (white)
+- Favor `linear-gradient` or flat fills + **single accent family** over rainbow gradients.
+- Optional: faint background grid (`background-image` linear repeats), `text-shadow` glow only if restrained (cyan on white title).
+- Lineup rows: clear separators; numbers in accent color.
 
-Special effects: None
-```
+**Reference folder:** `reference-posters/industrial/`
+
+---
+
+### Preset: Prime
+
+**Intent:** “Proper” club techno poster — high energy, headline-first, readable lineup. Should feel like a **real event flyer**, not a UI mock.
+
+**Moodboard (from references):**
+
+- Strong **visual hierarchy**: title dominates, then date/context, then lineup.
+- Room for **texture** (grain, airbrush-like softness) or **bold color blocking** (saturated reds, blues, oranges) depending on final ref choice.
+- Mix of **display energy** (custom/heavy title treatment) + **workhorse sans** for artist lines.
+- Optional graphic tension: crop marks, UI-adjacent details, or illustrative focal point — keep **lineup legible** at export resolution.
+
+**Open point:** If references skew **Halloween / neo-maximal**, add at least one **high-key** ref (light background, dark type) so “Prime” does not drift into Pulse or Industrial.
+
+**Implementation notes:**
+
+- Token set should separate **title treatment** from **body** (weight, tracking, optional outline).
+- Test **html2canvas** early if using heavy filters, blend modes, or large images.
+
+**Reference folder:** `reference-posters/prime/`
+
+---
+
+### Preset: Minimal
+
+**Intent:** Swiss / brutalist club minimal — structure and type carry everything.
+
+**Moodboard (from references):**
+
+- **Monochrome** (black & white) or near-monochrome; thick rules and **grid cells**.
+- No illustration required; optional **rhythmic patterns** (bars, repeated lines) as texture.
+- Typography: **neutral grotesk**, caps, consistent tracking; lineup as disciplined blocks.
+- Zero decorative gradients unless extremely subtle (off-white vs pure white).
+
+**Implementation notes:**
+
+- Borders and `gap` are part of the aesthetic; use explicit `border` weights.
+- Extremely sensitive to alignment — poster padding and lineup indentation must match the grid logic.
+
+**Reference folder:** `reference-posters/minimal/`
+
+---
+
+### Preset: Sunset
+
+**Intent:** House / summer / open air — warmth, daylight optimism, leisure.
+
+**Moodboard (from references):**
+
+- **Warm spectrum**: sun yellow, coral, soft orange, sky blue, sea blues — flat or simple illustrated shapes (sunburst, waves, horizon).
+- Playful but **legible**; lineup can sit on a solid band or high-contrast strip if the background is busy.
+- Avoid the cold cyan-dominant palette of Industrial.
+
+**Implementation notes:**
+
+- Illustration-heavy looks may need **SVG** or CSS shapes first; photos are a later step.
+- Prefer **large flat color fields** over dark muddy gradients for this preset.
+
+**Reference folder:** `reference-posters/sunset/`
+
+---
+
+### Preset: Pulse
+
+**Intent:** Neo-rave / current club-graphic energy — emotional, glossy, night-time, social-feed native.
+
+**Moodboard (from references):**
+
+- **Dark base** + **neon accents** (red, magenta, electric yellow, purple glow).
+- **Film grain** or noise across the poster; **glow** on script or display lines (`text-shadow` / soft layers).
+- Mix **heavy sans** (club name) with **script or soft display** (secondary line); optional sticker-like shapes or flares — use sparingly so export stays clean.
+- Center-weight composition (hero figure or glow) + **left-aligned** or stacked lineup is acceptable.
+
+**Implementation notes:**
+
+- Grain: CSS noise overlay (pseudo-element + SVG filter or small repeating asset) — verify performance and **html2canvas** fidelity.
+- Keep glow layers countable; too many shadows blur export.
+
+**Reference folder:** `reference-posters/pulse/`
+
+---
+
+### Legacy poster presets (superseded)
+
+The following existed in early builds and are **replaced conceptually** by the five presets above once implementation catches up: Neon, Dark Rave, Retro, Gradient (plus the old “Minimal” token set, which may differ from the new **Minimal** moodboard). Remove this subsection when the codebase no longer references legacy `presetId` values.
 
 ---
 
