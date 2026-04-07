@@ -165,11 +165,10 @@ export function LineupBuilder({ lineupSlots, onSlotsChange }: LineupBuilderProps
               key={slotIndex}
               className="relative rounded-lg border bg-card p-3 transition-colors hover:border-muted-foreground/30 sm:p-4"
             >
-              <div className="absolute -left-2 top-3 flex size-6 items-center justify-center rounded-full bg-muted text-xs font-semibold sm:size-7 sm:text-sm">
-                {slotIndex + 1}
-              </div>
-
-              <div className="ml-4 space-y-3 sm:ml-5">
+              <span className="absolute right-3 top-2 text-[0.6rem] font-medium tabular-nums text-muted-foreground/40 sm:right-4">
+                {String(slotIndex + 1).padStart(2, "0")}
+              </span>
+              <div className="space-y-3">
                 <div>
                   <Label className="text-xs">Artist Name</Label>
                   <ArtistAutocomplete
