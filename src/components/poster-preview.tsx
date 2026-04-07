@@ -1,4 +1,4 @@
-import { useId } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import type { LineupSlot, PresetConfig, PresetId } from "@/types";
 import { getPresetConfigById } from "../data/presets";
 import { cn } from "@/lib/utils";
@@ -7,29 +7,31 @@ import {
   computeSlotTimeRange,
 } from "@/utils/time";
 
+const POSTER_DESIGN_WIDTH = 448;
+
 type PosterPreviewProps = {
   presetId: PresetId;
   lineupSlots: LineupSlot[];
 };
 
 const POSTER_LINEUP_TYPOGRAPHY_COMPACT = {
-  rowNumber: "text-[0.6rem] font-bold sm:text-xs",
-  artistName: "text-[0.7rem] font-bold tracking-wide uppercase sm:text-sm lg:text-base",
-  timeRange: "text-[0.6rem] font-semibold sm:text-xs",
+  rowNumber: "text-xs font-bold",
+  artistName: "text-base font-bold tracking-wide uppercase",
+  timeRange: "text-xs font-semibold",
 } as const;
 
 const POSTER_LINEUP_TYPOGRAPHY_MEDIUM = {
-  rowNumber: "text-[0.65rem] font-bold sm:text-xs lg:text-sm",
+  rowNumber: "text-sm font-bold",
   artistName:
-    "text-[0.85rem] font-bold tracking-wide uppercase sm:text-base lg:text-lg",
-  timeRange: "text-[0.65rem] font-semibold sm:text-xs lg:text-xs",
+    "text-lg font-bold tracking-wide uppercase",
+  timeRange: "text-xs font-semibold",
 } as const;
 
 const POSTER_LINEUP_TYPOGRAPHY_DUO = {
-  rowNumber: "text-[0.68rem] font-bold sm:text-sm lg:text-base",
+  rowNumber: "text-base font-bold",
   artistName:
-    "text-[0.95rem] font-bold tracking-wide uppercase sm:text-lg lg:text-[1.35rem]",
-  timeRange: "text-[0.68rem] font-semibold sm:text-xs lg:text-sm",
+    "text-[1.35rem] font-bold tracking-wide uppercase",
+  timeRange: "text-sm font-semibold",
 } as const;
 
 function getLineupTypographyClasses(slotCount: number) {
@@ -402,19 +404,19 @@ function PosterDecorativeOverlay({ presetConfig }: { presetConfig: PresetConfig 
         <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
           {/* Pretitle — top-right corner */}
           <p
-            className="absolute top-8 right-5 text-[0.85rem] font-black uppercase tracking-[0.3em] text-white/50 sm:top-11 sm:right-7 sm:text-[1.1rem]"
+            className="absolute top-11 right-7 text-[1.1rem] font-black uppercase tracking-[0.3em] text-white/50"
           >
             {presetConfig.pretitleLabel}
           </p>
           {/* Subtitle — top-left corner */}
           <p
-            className="absolute top-5 left-5 text-[0.42rem] font-medium uppercase tracking-[0.25em] text-white/55 sm:top-7 sm:left-7 sm:text-[0.48rem]"
+            className="absolute top-7 left-7 text-[0.48rem] font-medium uppercase tracking-[0.25em] text-white/55"
           >
             presented by dreamfloor.app
           </p>
           {/* Centered DREAMFLOOR title */}
-          <div className="absolute inset-x-0 top-14 flex justify-center sm:top-18">
-            <h2 className="text-[1.8rem] font-black uppercase leading-none tracking-tight text-white sm:text-[2.4rem] lg:text-[2.9rem]">
+          <div className="absolute inset-x-0 top-18 flex justify-center">
+            <h2 className="text-[2.9rem] font-black uppercase leading-none tracking-tight text-white">
               Dreamfloor
             </h2>
           </div>
@@ -491,10 +493,10 @@ function getLineupItemClassNames(
   isFewSlots: boolean,
 ): string {
   const flexBasis = isDuoLineup
-    ? "flex min-h-0 flex-1 flex-col justify-center last:pb-0 sm:pb-2"
+    ? "flex min-h-0 flex-1 flex-col justify-center pb-2 last:pb-0"
     : isFewSlots
-      ? "flex flex-col justify-center last:pb-0 sm:pb-2"
-      : "flex min-h-0 flex-1 flex-col justify-center last:pb-0 sm:pb-2";
+      ? "flex flex-col justify-center pb-2 last:pb-0"
+      : "flex min-h-0 flex-1 flex-col justify-center pb-2 last:pb-0";
 
   switch (presetConfig.lineupRhythmKind) {
     case "industrial-left-rail":
@@ -557,29 +559,59 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
   const titleTextShadow = getTitleTextShadow(presetConfig);
 
   const lineupListLayout = isDuoLineup
-    ? "flex min-h-0 flex-1 flex-col justify-between gap-0 py-3 sm:py-5"
+    ? "flex min-h-0 flex-1 flex-col justify-between gap-0 py-5"
     : isFewSlots
-      ? "flex min-h-0 flex-1 flex-col justify-center gap-6 sm:gap-8"
+      ? "flex min-h-0 flex-1 flex-col justify-center gap-8"
       : "flex min-h-0 flex-1 flex-col";
+
+  const scaleWrapperRef = useRef<HTMLDivElement>(null);
+  const [posterScale, setPosterScale] = useState(1);
+
+  const recalculateScale = useCallback(() => {
+    const wrapperElement = scaleWrapperRef.current;
+    if (!wrapperElement) return;
+    const availableWidth = wrapperElement.clientWidth;
+    setPosterScale(Math.min(1, availableWidth / POSTER_DESIGN_WIDTH));
+  }, []);
+
+  useEffect(() => {
+    recalculateScale();
+    const wrapperElement = scaleWrapperRef.current;
+    if (!wrapperElement) return;
+    const resizeObserver = new ResizeObserver(recalculateScale);
+    resizeObserver.observe(wrapperElement);
+    return () => resizeObserver.disconnect();
+  }, [recalculateScale]);
+
+  const posterHeight = POSTER_DESIGN_WIDTH * (4 / 3);
 
   return (
     <div className="space-y-3">
       <h2 className="text-sm font-semibold">Live Preview</h2>
       <div
-        id="poster-preview"
-        className={cn(
-          "relative mx-auto aspect-3/4 w-full max-w-[280px] overflow-hidden rounded-lg shadow-2xl sm:max-w-[384px] lg:mx-0 lg:max-w-[448px]",
-          presetConfig.posterRootClassName,
-        )}
-        style={{
-          background: presetConfig.background,
-          color: presetConfig.textColor,
-        }}
+        ref={scaleWrapperRef}
+        className="mx-auto w-full lg:mx-0"
+        style={{ maxWidth: POSTER_DESIGN_WIDTH, height: posterHeight * posterScale }}
       >
+        <div
+          id="poster-preview"
+          className={cn(
+            "relative overflow-hidden shadow-2xl",
+            presetConfig.posterRootClassName,
+          )}
+          style={{
+            width: POSTER_DESIGN_WIDTH,
+            height: posterHeight,
+            background: presetConfig.background,
+            color: presetConfig.textColor,
+            transform: `scale(${posterScale})`,
+            transformOrigin: "top left",
+          }}
+        >
         <PosterDecorativeOverlay presetConfig={presetConfig} />
         <div
           className={cn(
-            "relative z-1 flex h-full min-h-0 flex-col p-5 sm:p-7 lg:p-9",
+            "relative z-1 flex h-full min-h-0 flex-col p-9",
             presetConfig.posterInnerClassName,
           )}
         >
@@ -587,7 +619,7 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
             {presetConfig.presetId === "prime" ? (
               <div className="text-right">
                 <p
-                  className="text-[0.5rem] font-semibold uppercase tracking-[0.35em] opacity-60 sm:text-[0.58rem]"
+                  className="text-[0.58rem] font-semibold uppercase tracking-[0.35em] opacity-60"
                   style={{ color: presetConfig.accentColor }}
                 >
                   {presetConfig.pretitleLabel}
@@ -596,7 +628,7 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
                   {renderTitleHeading(presetConfig, titleTextShadow)}
                 </div>
                 <p
-                  className="mt-2 text-[0.42rem] font-medium uppercase tracking-[0.3em] sm:text-[0.5rem]"
+                  className="mt-2 text-[0.5rem] font-medium uppercase tracking-[0.3em]"
                   style={{ color: presetConfig.secondaryTextColor }}
                 >
                   presented by dreamfloor.app
@@ -606,7 +638,7 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
               <>
                 {presetConfig.pretitleLabel ? (
                   <p
-                    className="mb-2 text-[0.5rem] font-semibold uppercase tracking-[0.28em] opacity-70 sm:text-[0.58rem]"
+                    className="mb-2 text-[0.58rem] font-semibold uppercase tracking-[0.28em] opacity-70"
                     style={{ color: presetConfig.subtitleColor }}
                   >
                     {presetConfig.pretitleLabel}
@@ -624,8 +656,8 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
           </div>
 
           {presetConfig.presetId === "sunset" && (
-            <div className="my-3 flex flex-1 items-center justify-center sm:my-4">
-              <svg className="w-[45%] sm:w-[50%]" viewBox="0 0 200 200" aria-hidden>
+            <div className="my-4 flex flex-1 items-center justify-center">
+              <svg className="w-[50%]" viewBox="0 0 200 200" aria-hidden>
                 <title>Sun</title>
                 <defs>
                   <radialGradient id="sun-core-grad" cx="0.5" cy="0.5" r="0.5">
@@ -663,7 +695,7 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
 
           <div className={cn(
             "mt-4 flex min-h-0 flex-col",
-            presetConfig.overlayKind === "gradient-diagonal" ? "mt-24 flex-1 sm:mt-32 lg:mt-36" : "flex-1",
+            presetConfig.overlayKind === "gradient-diagonal" ? "mt-36 flex-1" : "flex-1",
           )}>
             {hasAnyArtist ? (
               <ul className={cn(lineupListLayout, presetConfig.lineupListClassName)}>
@@ -703,7 +735,7 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
                     >
                       {presetConfig.lineupRhythmKind === "sunset-inline-clean" ? (
                         <p
-                          className="text-[0.85rem] font-black uppercase tracking-wide sm:text-[1.05rem]"
+                          className="text-[1.05rem] font-black uppercase tracking-wide"
                           style={{ color: presetConfig.textColor }}
                         >
                           {displayName}
@@ -730,7 +762,7 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
                             {displayName}
                           </span>
                           <span
-                            className="font-sans text-[0.5rem] font-medium uppercase tabular-nums tracking-widest opacity-50 sm:text-[0.6rem]"
+                            className="font-sans text-[0.6rem] font-medium uppercase tabular-nums tracking-widest opacity-50"
                             style={{ color: presetConfig.secondaryTextColor }}
                           >
                             {isAllNightLongSlot
@@ -740,7 +772,7 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
                         </div>
                       ) : presetConfig.lineupRhythmKind === "prime-arrow-list" ? (
                         <div className="flex items-baseline gap-2">
-                          <span className="text-[1rem] font-bold uppercase tracking-wide sm:text-[1.2rem] lg:text-xl">
+                          <span className="text-xl font-bold uppercase tracking-wide">
                             {displayName}
                           </span>
                           <span
@@ -748,7 +780,7 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
                             style={{ borderColor: presetConfig.textColor }}
                           />
                           <span
-                            className="shrink-0 font-sans text-[0.6rem] font-semibold tabular-nums tracking-wider sm:text-[0.72rem]"
+                            className="shrink-0 font-sans text-[0.72rem] font-semibold tabular-nums tracking-wider"
                             style={{ color: presetConfig.textColor, opacity: 0.7 }}
                           >
                             {isAllNightLongSlot
@@ -777,7 +809,7 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
                           <p
                             className={cn(
                               "mt-0.5",
-                              presetConfig.showLineupNumbers ? "pl-5 sm:pl-6" : "text-center",
+                              presetConfig.showLineupNumbers ? "pl-6" : "text-center",
                               lineupTypographyClasses.timeRange,
                             )}
                             style={{ color: presetConfig.secondaryTextColor }}
@@ -800,11 +832,12 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
           </div>
         </div>
         <p
-          className="absolute inset-x-0 bottom-1.5 z-10 text-center text-[0.32rem] uppercase tracking-[0.2em] opacity-30 sm:bottom-2 sm:text-[0.36rem]"
+          className="absolute inset-x-0 bottom-2 z-10 text-center text-[0.36rem] uppercase tracking-[0.2em] opacity-30"
           style={{ color: presetConfig.textColor }}
         >
           This event is fictional &middot; Generated on dreamfloor.app
         </p>
+      </div>
       </div>
     </div>
   );

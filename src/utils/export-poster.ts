@@ -16,6 +16,11 @@ export async function capturePosterAsBlob(): Promise<Blob | null> {
   const blob = await toBlob(posterElement, {
     pixelRatio: EXPORT_SCALE,
     cacheBust: true,
+    width: posterElement.offsetWidth,
+    height: posterElement.offsetHeight,
+    style: {
+      transform: "none",
+    },
   });
 
   return blob ?? null;

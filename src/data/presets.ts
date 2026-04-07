@@ -14,9 +14,9 @@ export const PRESET_CONFIGS: PresetConfig[] = [
     posterInnerClassName: "",
     titleBlockClassName: "",
     titleClassName:
-      "font-prime text-[1.9rem] font-black uppercase leading-[0.92] tracking-tight sm:text-[2.65rem] lg:text-[3.2rem]",
+      "font-prime text-[3.2rem] font-black uppercase leading-[0.92] tracking-tight",
     subtitleClassName:
-      "mt-3 text-[0.5rem] font-semibold uppercase tracking-[0.35em] sm:text-[0.58rem]",
+      "mt-3 text-[0.58rem] font-semibold uppercase tracking-[0.35em]",
     lineupListClassName: "mt-4 font-prime-lineup",
     overlayKind: "prime-flyer-slab",
     titleLayoutKind: "slab-band-prime",
@@ -37,9 +37,9 @@ export const PRESET_CONFIGS: PresetConfig[] = [
     posterInnerClassName: "justify-between",
     titleBlockClassName: "border-b-2 border-black pb-4",
     titleClassName:
-      "text-2xl font-light uppercase leading-none tracking-[0.35em] sm:text-3xl lg:text-4xl",
+      "text-4xl font-light uppercase leading-none tracking-[0.35em]",
     subtitleClassName:
-      "mt-3 text-[0.55rem] font-normal normal-case tracking-wide opacity-70 sm:text-xs",
+      "mt-3 text-xs font-normal normal-case tracking-wide opacity-70",
     lineupListClassName: "pt-2",
     overlayKind: "minimal-editorial",
     titleLayoutKind: "minimal-swiss-clean",
@@ -61,9 +61,9 @@ export const PRESET_CONFIGS: PresetConfig[] = [
     posterInnerClassName: "items-center text-center",
     titleBlockClassName: "",
     titleClassName:
-      "font-industrial text-[2.2rem] font-bold uppercase leading-[0.88] tracking-[0.08em] sm:text-[3.2rem] lg:text-[3.8rem]",
+      "font-industrial text-[3.8rem] font-bold uppercase leading-[0.88] tracking-[0.08em]",
     subtitleClassName:
-      "mt-3 text-[0.5rem] font-semibold uppercase tracking-[0.25em] text-red-400/70 sm:text-[0.6rem]",
+      "mt-3 text-[0.6rem] font-semibold uppercase tracking-[0.25em] text-red-400/70",
     lineupListClassName: "mt-6 w-full",
     overlayKind: "industrial-rough",
     titleLayoutKind: "stacked-brutal-default",
@@ -85,9 +85,9 @@ export const PRESET_CONFIGS: PresetConfig[] = [
     posterInnerClassName: "items-center text-center",
     titleBlockClassName: "",
     titleClassName:
-      "text-[1.6rem] font-bold uppercase leading-none tracking-tight sm:text-[2.2rem] lg:text-[2.6rem]",
+      "text-[2.6rem] font-bold uppercase leading-none tracking-tight",
     subtitleClassName:
-      "mt-2 text-[0.5rem] font-medium uppercase tracking-[0.25em] sm:text-[0.6rem]",
+      "mt-2 text-[0.6rem] font-medium uppercase tracking-[0.25em]",
     lineupListClassName: "mt-5 w-full",
     overlayKind: "sunset-blobs",
     titleLayoutKind: "sunset-badge-stack",

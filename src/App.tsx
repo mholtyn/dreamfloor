@@ -8,7 +8,7 @@ import { TopBar } from "@/components/top-bar";
 import { fetchLineupCount } from "@/lib/dreamfloorApi";
 import type { LineupSlot, PresetId } from "@/types";
 
-const INITIAL_PRESET_ID: PresetId = "neon";
+const INITIAL_PRESET_ID: PresetId = "prime";
 const INITIAL_LINEUP_SLOTS: LineupSlot[] = [
   { artistName: "Charlotte de Witte", durationMinutes: 120 },
   { artistName: "Amelie Lens", durationMinutes: 90 },
