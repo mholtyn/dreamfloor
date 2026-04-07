@@ -403,6 +403,57 @@ function PosterDecorativeOverlay({ presetConfig }: { presetConfig: PresetConfig 
           }}
         />
       );
+    case "gradient-diagonal":
+      return (
+        <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+          {/* Pretitle — top-right corner */}
+          <p
+            className="absolute top-8 right-5 text-[0.85rem] font-black uppercase tracking-[0.3em] text-white/50 sm:top-11 sm:right-7 sm:text-[1.1rem]"
+          >
+            {presetConfig.pretitleLabel}
+          </p>
+          {/* Subtitle — top-left corner */}
+          <p
+            className="absolute top-5 left-5 text-[0.42rem] font-medium uppercase tracking-[0.25em] text-white/55 sm:top-7 sm:left-7 sm:text-[0.48rem]"
+          >
+            presented by dreamfloor.app
+          </p>
+          {/* Centered DREAMFLOOR title */}
+          <div className="absolute inset-x-0 top-14 flex justify-center sm:top-18">
+            <h2 className="text-[1.8rem] font-black uppercase leading-none tracking-tight text-white sm:text-[2.4rem] lg:text-[2.9rem]">
+              Dreamfloor
+            </h2>
+          </div>
+          {/* Soft mesh blobs */}
+          <svg className="absolute inset-0 h-full w-full opacity-[0.18]" viewBox="0 0 300 400" preserveAspectRatio="none" aria-hidden>
+            <title>Mesh</title>
+            <defs>
+              <radialGradient id="grad-mesh-a" cx="0.2" cy="0.25" r="0.45">
+                <stop offset="0%" stopColor="#a3e635" stopOpacity="0.35" />
+                <stop offset="100%" stopColor="transparent" stopOpacity="0" />
+              </radialGradient>
+              <radialGradient id="grad-mesh-b" cx="0.8" cy="0.7" r="0.4">
+                <stop offset="0%" stopColor="#475569" stopOpacity="0.5" />
+                <stop offset="100%" stopColor="transparent" stopOpacity="0" />
+              </radialGradient>
+              <radialGradient id="grad-mesh-c" cx="0.5" cy="0.5" r="0.5">
+                <stop offset="0%" stopColor="#64748b" stopOpacity="0.3" />
+                <stop offset="100%" stopColor="transparent" stopOpacity="0" />
+              </radialGradient>
+            </defs>
+            <ellipse cx="70" cy="100" rx="90" ry="80" fill="url(#grad-mesh-a)" />
+            <ellipse cx="230" cy="280" rx="80" ry="70" fill="url(#grad-mesh-b)" />
+            <ellipse cx="150" cy="200" rx="100" ry="90" fill="url(#grad-mesh-c)" />
+          </svg>
+          {/* Vignette */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: "radial-gradient(ellipse at center, transparent 35%, rgba(15,23,42,0.3) 100%)",
+            }}
+          />
+        </div>
+      );
     case "minimal-editorial":
       return (
         <div
@@ -472,6 +523,8 @@ function getLineupItemClassNames(
       return cn(flexBasis, "border-b border-black/20 pb-2 last:border-b-0");
     case "prime-arrow-list":
       return cn(flexBasis, "mb-2.5 last:mb-0");
+    case "gradient-diagonal-list":
+      return cn(flexBasis, "min-h-0 flex-1 mb-1.5 last:mb-0");
     case "default-underline":
     default:
       return cn(
@@ -574,7 +627,10 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
             )}
           </div>
 
-          <div className="mt-4 flex min-h-0 flex-1 flex-col">
+          <div className={cn(
+            "mt-4 flex min-h-0 flex-col",
+            presetConfig.overlayKind === "gradient-diagonal" ? "mt-24 flex-1 sm:mt-32 lg:mt-36" : "flex-1",
+          )}>
             {hasAnyArtist ? (
               <ul className={cn(lineupListLayout, presetConfig.lineupListClassName)}>
                 {lineupSlots.map((slot, slotIndex) => {
@@ -611,7 +667,32 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
                             : undefined,
                       }}
                     >
-                      {presetConfig.lineupRhythmKind === "prime-arrow-list" ? (
+                      {presetConfig.lineupRhythmKind === "gradient-diagonal-list" ? (
+                        <div className={cn(
+                          "flex items-baseline gap-3",
+                          slotIndex % 2 === 0 ? "justify-start" : "flex-row-reverse justify-start text-right",
+                        )}>
+                          <span
+                            className="font-extrabold uppercase tracking-wider"
+                            style={{
+                              color: presetConfig.textColor,
+                              transform: slotIndex % 2 === 0 ? "skewX(-4deg)" : "skewX(4deg)",
+                              display: "inline-block",
+                              fontSize: `${Math.max(1.6 - 2 * 0.25, 1.6 - slotIndex * 0.25)}rem`,
+                            }}
+                          >
+                            {displayName}
+                          </span>
+                          <span
+                            className="shrink-0 font-sans text-[0.5rem] font-medium uppercase tabular-nums tracking-widest opacity-50 sm:text-[0.6rem]"
+                            style={{ color: presetConfig.secondaryTextColor }}
+                          >
+                            {isAllNightLongSlot
+                              ? "ALL NIGHT"
+                              : `${startTimeLabel}–${endTimeLabel}`}
+                          </span>
+                        </div>
+                      ) : presetConfig.lineupRhythmKind === "prime-arrow-list" ? (
                         <div className="flex items-baseline gap-2">
                           <span className="text-[1rem] font-bold uppercase tracking-wide sm:text-[1.2rem] lg:text-xl">
                             {displayName}

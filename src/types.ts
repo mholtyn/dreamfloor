@@ -23,6 +23,7 @@ export type PosterOverlayKind =
   | "retro-horizontal-bars"
   | "dark-rave-spotlight"
   | "gradient-soft-vignette"
+  | "gradient-diagonal"
   | "minimal-editorial";
 
 /** Drives title block structure and typography rhythm. */
@@ -37,6 +38,7 @@ export type PosterTitleLayoutKind =
   | "retro-poster-stack"
   | "dark-rave-stencil-stack"
   | "gradient-airy-stack"
+  | "gradient-diagonal-title"
   | "minimal-swiss-clean";
 
 /** How lineup rows are separated and aligned per identity. */
@@ -48,7 +50,8 @@ export type PosterLineupRhythmKind =
   | "pulse-loose-blocks"
   | "retro-heavy-underline"
   | "minimal-hairline"
-  | "prime-arrow-list";
+  | "prime-arrow-list"
+  | "gradient-diagonal-list";
 
 export type PresetConfig = {
   presetId: PresetId;
