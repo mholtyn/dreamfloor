@@ -184,16 +184,150 @@ function PosterDecorativeOverlay({ presetConfig }: { presetConfig: PresetConfig 
           />
         </div>
       );
-    case "prime-flyer-slab":
+    case "prime-flyer-slab": {
+      const primeGrainId = `prime-grain-${grainFilterDomId}`;
       return (
         <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-          <div
-            className="absolute -right-8 -bottom-16 h-40 w-[140%] rotate-[-8deg] bg-amber-400/15"
+          {/* Complex organic blob cluster — right side */}
+          <svg
+            className="absolute -right-[10%] top-[5%] h-[80%] w-[70%] opacity-[0.14]"
+            viewBox="0 0 250 350"
             aria-hidden
-          />
-          <div className="absolute top-0 left-0 h-1.5 w-full bg-linear-to-r from-amber-400/40 via-fuchsia-500/20 to-transparent" />
+          >
+            <title>Decorative shapes</title>
+            <defs>
+              <linearGradient id="prime-blob-a" x1="0" y1="0" x2="0.8" y2="1">
+                <stop offset="0%" stopColor="#7c3aed" />
+                <stop offset="60%" stopColor="#4f46e5" />
+                <stop offset="100%" stopColor="#1e1b4b" />
+              </linearGradient>
+              <linearGradient id="prime-blob-b" x1="1" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#8b5cf6" />
+                <stop offset="100%" stopColor="#312e81" stopOpacity="0.4" />
+              </linearGradient>
+              <radialGradient id="prime-blob-c" cx="0.4" cy="0.35" r="0.65">
+                <stop offset="0%" stopColor="#a78bfa" stopOpacity="0.9" />
+                <stop offset="100%" stopColor="#1e1b4b" stopOpacity="0.3" />
+              </radialGradient>
+              <linearGradient id="prime-blob-d" x1="0.2" y1="0" x2="0.9" y2="1">
+                <stop offset="0%" stopColor="#6d28d9" stopOpacity="0.7" />
+                <stop offset="100%" stopColor="#7c3aed" stopOpacity="0.2" />
+              </linearGradient>
+            </defs>
+            {/* Main large blob */}
+            <path
+              d="M130 15 C170 8,210 45,215 90 C220 135,240 160,225 205 C210 250,185 280,145 295 C105 310,65 290,45 255 C25 220,8 185,15 145 C22 105,35 75,60 50 C85 25,100 22,130 15Z"
+              fill="url(#prime-blob-a)"
+            />
+            {/* Overlapping secondary blob — offset, different shape */}
+            <path
+              d="M160 55 C195 48,225 80,228 120 C231 160,220 200,195 225 C170 250,135 245,115 220 C95 195,85 160,95 125 C105 90,130 62,160 55Z"
+              fill="url(#prime-blob-b)"
+              opacity="0.6"
+            />
+            {/* Small accent blob — top */}
+            <path
+              d="M90 5 C110 -2,130 15,125 35 C120 55,100 62,82 52 C64 42,70 12,90 5Z"
+              fill="url(#prime-blob-c)"
+              opacity="0.5"
+            />
+            {/* Mid-left tendril blob — adds asymmetry */}
+            <path
+              d="M30 120 C15 135,5 165,18 195 C31 225,55 218,60 192 C65 166,50 140,30 120Z"
+              fill="url(#prime-blob-d)"
+              opacity="0.45"
+            />
+            {/* Bottom-right organic smear */}
+            <path
+              d="M175 260 C205 255,235 275,232 305 C229 335,200 345,180 330 C160 315,148 280,175 260Z"
+              fill="url(#prime-blob-c)"
+              opacity="0.35"
+            />
+            {/* Floating dot-blobs */}
+            <ellipse cx="55" cy="200" rx="18" ry="22" fill="#7c3aed" opacity="0.3" />
+            <ellipse cx="200" cy="310" rx="12" ry="15" fill="#4f46e5" opacity="0.25" />
+            <circle cx="38" cy="80" r="8" fill="#8b5cf6" opacity="0.3" />
+            <circle cx="210" cy="42" r="6" fill="#6d28d9" opacity="0.2" />
+            <ellipse cx="145" cy="330" rx="10" ry="7" fill="#a78bfa" opacity="0.2" />
+          </svg>
+          {/* Secondary small blob cluster — bottom-left corner */}
+          <svg
+            className="absolute -bottom-[5%] -left-[8%] h-[30%] w-[35%] opacity-[0.08]"
+            viewBox="0 0 120 120"
+            aria-hidden
+          >
+            <title>Secondary blobs</title>
+            <path
+              d="M60 10 C85 5,110 30,105 58 C100 86,80 110,55 108 C30 106,8 82,12 55 C16 28,35 15,60 10Z"
+              fill="url(#prime-blob-b)"
+            />
+            <circle cx="90" cy="25" r="14" fill="#8b5cf6" opacity="0.5" />
+            <ellipse cx="30" cy="95" rx="16" ry="12" fill="#6d28d9" opacity="0.4" />
+          </svg>
+          {/* Flowing accent lines — complex, overlapping, varied stroke */}
+          <svg className="absolute inset-0 h-full w-full" viewBox="0 0 300 400" preserveAspectRatio="none" aria-hidden>
+            <title>Accent lines</title>
+            {/* Long sweeping curve — top left to mid right */}
+            <path
+              d="M-10 30 C30 18,65 55,110 38 C155 21,185 52,230 40 C275 28,295 55,310 48"
+              fill="none"
+              stroke="#5b21b6"
+              strokeWidth="1.4"
+              opacity="0.35"
+            />
+            {/* Parallel echo of first line — slightly offset */}
+            <path
+              d="M-5 42 C35 32,70 62,115 48 C160 34,188 58,235 50"
+              fill="none"
+              stroke="#5b21b6"
+              strokeWidth="0.7"
+              opacity="0.2"
+            />
+            {/* Bottom flowing curve */}
+            <path
+              d="M-15 385 C25 372,60 398,110 385 C160 370,200 393,250 382 C280 376,300 388,315 383"
+              fill="none"
+              stroke="#7c3aed"
+              strokeWidth="1.2"
+              opacity="0.28"
+            />
+            {/* Left-side diagonal sweep — extends beyond poster edges */}
+            <path
+              d="M45 -30 C30 20,38 70,22 120 C6 170,25 220,12 275 C-1 330,20 380,10 430"
+              fill="none"
+              stroke="#6d28d9"
+              strokeWidth="1.1"
+              opacity="0.28"
+            />
+            {/* Short left-side accent — starts beyond poster */}
+            <path
+              d="M-40 148 C-20 138,5 152,28 140 C52 128,78 142,92 135"
+              fill="none"
+              stroke="#5b21b6"
+              strokeWidth="0.8"
+              opacity="0.18"
+            />
+            {/* Loose scribble near bottom-left — starts beyond poster */}
+            <path
+              d="M-35 315 C-10 302,20 318,48 305 C75 292,108 312,125 302"
+              fill="none"
+              stroke="#7c3aed"
+              strokeWidth="0.7"
+              opacity="0.15"
+            />
+          </svg>
+          {/* Grain overlay */}
+          <svg className="absolute inset-0 h-full w-full opacity-[0.09] mix-blend-overlay" aria-hidden>
+            <title>Grain</title>
+            <filter id={primeGrainId}>
+              <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="4" stitchTiles="stitch" result="noise" />
+              <feColorMatrix type="saturate" values="0" in="noise" />
+            </filter>
+            <rect width="100%" height="100%" filter={`url(#${primeGrainId})`} />
+          </svg>
         </div>
       );
+    }
     case "swiss-frame":
       return (
         <div className="pointer-events-none absolute inset-2 z-0 border border-white/12" aria-hidden />
@@ -336,6 +470,8 @@ function getLineupItemClassNames(
       return cn(flexBasis, "border-b-4 border-current pb-2 last:border-b-0");
     case "minimal-hairline":
       return cn(flexBasis, "border-b border-black/20 pb-2 last:border-b-0");
+    case "prime-arrow-list":
+      return cn(flexBasis, "mb-1 last:mb-0");
     case "default-underline":
     default:
       return cn(
@@ -399,21 +535,43 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
           )}
         >
           <div className={cn("shrink-0", presetConfig.titleBlockClassName)}>
-            {presetConfig.pretitleLabel ? (
-              <p
-                className="mb-2 text-[0.5rem] font-semibold uppercase tracking-[0.28em] opacity-70 sm:text-[0.58rem]"
-                style={{ color: presetConfig.subtitleColor }}
-              >
-                {presetConfig.pretitleLabel}
-              </p>
-            ) : null}
-            {renderTitleHeading(presetConfig, titleTextShadow)}
-            <p
-              className={cn(presetConfig.subtitleClassName)}
-              style={{ color: presetConfig.subtitleColor }}
-            >
-              Presented by Dreamfloor.app
-            </p>
+            {presetConfig.presetId === "prime" ? (
+              <div className="text-right">
+                <p
+                  className="text-[0.5rem] font-semibold uppercase tracking-[0.35em] opacity-60 sm:text-[0.58rem]"
+                  style={{ color: presetConfig.accentColor }}
+                >
+                  {presetConfig.pretitleLabel}
+                </p>
+                <div className="mt-2">
+                  {renderTitleHeading(presetConfig, titleTextShadow)}
+                </div>
+                <p
+                  className="mt-2 text-[0.42rem] font-medium uppercase tracking-[0.3em] sm:text-[0.5rem]"
+                  style={{ color: presetConfig.secondaryTextColor }}
+                >
+                  presented by dreamfloor.app
+                </p>
+              </div>
+            ) : (
+              <>
+                {presetConfig.pretitleLabel ? (
+                  <p
+                    className="mb-2 text-[0.5rem] font-semibold uppercase tracking-[0.28em] opacity-70 sm:text-[0.58rem]"
+                    style={{ color: presetConfig.subtitleColor }}
+                  >
+                    {presetConfig.pretitleLabel}
+                  </p>
+                ) : null}
+                {renderTitleHeading(presetConfig, titleTextShadow)}
+                <p
+                  className={cn(presetConfig.subtitleClassName)}
+                  style={{ color: presetConfig.subtitleColor }}
+                >
+                  Presented by Dreamfloor.app
+                </p>
+              </>
+            )}
           </div>
 
           <div className="mt-4 flex min-h-0 flex-1 flex-col">
@@ -453,34 +611,56 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
                             : undefined,
                       }}
                     >
-                      <div className={cn(
-                        "flex items-baseline gap-2",
-                        !presetConfig.showLineupNumbers && "justify-center",
-                      )}>
-                        {presetConfig.showLineupNumbers && (
-                          <span
-                            className={lineupTypographyClasses.rowNumber}
-                            style={{ color: presetConfig.accentColor }}
-                          >
-                            {slotNumber}
+                      {presetConfig.lineupRhythmKind === "prime-arrow-list" ? (
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-[0.88rem] font-bold uppercase tracking-wide sm:text-[1.05rem] lg:text-lg">
+                            {displayName}
                           </span>
-                        )}
-                        <span className={lineupTypographyClasses.artistName}>
-                          {displayName}
-                        </span>
-                      </div>
-                      <p
-                        className={cn(
-                          "mt-0.5",
-                          presetConfig.showLineupNumbers ? "pl-5 sm:pl-6" : "text-center",
-                          lineupTypographyClasses.timeRange,
-                        )}
-                        style={{ color: presetConfig.secondaryTextColor }}
-                      >
-                        {isAllNightLongSlot
-                          ? "All night long"
-                          : `${startTimeLabel} - ${endTimeLabel}`}
-                      </p>
+                          <span
+                            className="flex-1 border-b border-dotted opacity-20"
+                            style={{ borderColor: presetConfig.textColor }}
+                          />
+                          <span
+                            className="shrink-0 font-sans text-[0.55rem] tabular-nums tracking-wider sm:text-[0.65rem]"
+                            style={{ color: presetConfig.secondaryTextColor }}
+                          >
+                            {isAllNightLongSlot
+                              ? "ALL NIGHT"
+                              : `${startTimeLabel}–${endTimeLabel}`}
+                          </span>
+                        </div>
+                      ) : (
+                        <>
+                          <div className={cn(
+                            "flex items-baseline gap-2",
+                            !presetConfig.showLineupNumbers && "justify-center",
+                          )}>
+                            {presetConfig.showLineupNumbers && (
+                              <span
+                                className={lineupTypographyClasses.rowNumber}
+                                style={{ color: presetConfig.accentColor }}
+                              >
+                                {slotNumber}
+                              </span>
+                            )}
+                            <span className={lineupTypographyClasses.artistName}>
+                              {displayName}
+                            </span>
+                          </div>
+                          <p
+                            className={cn(
+                              "mt-0.5",
+                              presetConfig.showLineupNumbers ? "pl-5 sm:pl-6" : "text-center",
+                              lineupTypographyClasses.timeRange,
+                            )}
+                            style={{ color: presetConfig.secondaryTextColor }}
+                          >
+                            {isAllNightLongSlot
+                              ? "All night long"
+                              : `${startTimeLabel} - ${endTimeLabel}`}
+                          </p>
+                        </>
+                      )}
                     </li>
                   );
                 })}

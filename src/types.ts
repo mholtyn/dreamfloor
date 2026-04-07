@@ -52,7 +52,8 @@ export type PosterLineupRhythmKind =
   | "sunset-pill-rows"
   | "pulse-loose-blocks"
   | "retro-heavy-underline"
-  | "minimal-hairline";
+  | "minimal-hairline"
+  | "prime-arrow-list";
 
 export type PresetConfig = {
   presetId: PresetId;
