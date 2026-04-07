@@ -333,13 +333,7 @@ function PosterDecorativeOverlay({ presetConfig }: { presetConfig: PresetConfig 
         <div className="pointer-events-none absolute inset-2 z-0 border border-white/12" aria-hidden />
       );
     case "sunset-blobs":
-      return (
-        <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-          <div className="absolute top-[18%] left-1/2 size-28 -translate-x-1/2 rounded-full border-2 border-amber-100/85 bg-yellow-200/55 shadow-[0_0_60px_rgba(253,224,71,0.55)]" />
-          <div className="absolute top-[26%] left-1/2 h-8 w-44 -translate-x-1/2 rounded-full border border-amber-100/70 bg-yellow-100/35" />
-          <div className="absolute right-0 bottom-[33%] left-0 h-px bg-amber-50/70" />
-        </div>
-      );
+      return null;
     case "pulse-film-grain":
       return (
         <div className="pointer-events-none absolute inset-0 z-0 opacity-[0.18] mix-blend-overlay">
@@ -525,6 +519,8 @@ function getLineupItemClassNames(
       return cn(flexBasis, "mb-2.5 last:mb-0");
     case "gradient-diagonal-list":
       return cn(flexBasis, "min-h-0 flex-1 mb-1.5 last:mb-0");
+    case "sunset-inline-clean":
+      return cn(flexBasis, "mb-0 last:mb-0");
     case "default-underline":
     default:
       return cn(
@@ -627,6 +623,44 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
             )}
           </div>
 
+          {presetConfig.presetId === "sunset" && (
+            <div className="my-3 flex flex-1 items-center justify-center sm:my-4">
+              <svg className="w-[45%] sm:w-[50%]" viewBox="0 0 200 200" aria-hidden>
+                <title>Sun</title>
+                <defs>
+                  <radialGradient id="sun-core-grad" cx="0.5" cy="0.5" r="0.5">
+                    <stop offset="0%" stopColor="#fef08a" />
+                    <stop offset="60%" stopColor="#fbbf24" />
+                    <stop offset="100%" stopColor="#f59e0b" />
+                  </radialGradient>
+                </defs>
+                <circle cx="100" cy="100" r="85" fill="none" />
+                {Array.from({ length: 24 }).map((_, rayIndex) => {
+                  const angle = (rayIndex * 15) * (Math.PI / 180);
+                  const innerRadius = 42 + (rayIndex % 3 === 0 ? 4 : 0);
+                  const outerRadius = rayIndex % 2 === 0 ? 78 : 62;
+                  const rayWidth = rayIndex % 3 === 0 ? 3.5 : 2;
+                  const x1 = 100 + Math.cos(angle) * innerRadius;
+                  const y1 = 100 + Math.sin(angle) * innerRadius;
+                  const x2 = 100 + Math.cos(angle) * outerRadius;
+                  const y2 = 100 + Math.sin(angle) * outerRadius;
+                  return (
+                    <line
+                      key={rayIndex}
+                      x1={x1} y1={y1} x2={x2} y2={y2}
+                      stroke="#f59e0b"
+                      strokeWidth={rayWidth}
+                      strokeLinecap="round"
+                      opacity={rayIndex % 2 === 0 ? 0.7 : 0.45}
+                    />
+                  );
+                })}
+                <circle cx="100" cy="100" r="38" fill="url(#sun-core-grad)" />
+                <circle cx="100" cy="100" r="38" fill="none" stroke="#f59e0b" strokeWidth="1.5" opacity="0.5" />
+              </svg>
+            </div>
+          )}
+
           <div className={cn(
             "mt-4 flex min-h-0 flex-col",
             presetConfig.overlayKind === "gradient-diagonal" ? "mt-24 flex-1 sm:mt-32 lg:mt-36" : "flex-1",
@@ -667,7 +701,19 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
                             : undefined,
                       }}
                     >
-                      {presetConfig.lineupRhythmKind === "gradient-diagonal-list" ? (
+                      {presetConfig.lineupRhythmKind === "sunset-inline-clean" ? (
+                        <p
+                          className="text-[0.85rem] font-black uppercase tracking-wide sm:text-[1.05rem]"
+                          style={{ color: presetConfig.textColor }}
+                        >
+                          {displayName}
+                          <span className="ml-2">
+                            {isAllNightLongSlot
+                              ? "ALL NIGHT"
+                              : `${startTimeLabel.replace(":", "")} \u2600 ${endTimeLabel.replace(":", "")}`}
+                          </span>
+                        </p>
+                      ) : presetConfig.lineupRhythmKind === "gradient-diagonal-list" ? (
                         <div className={cn(
                           "flex flex-col",
                           slotIndex % 2 === 0 ? "items-start" : "items-end",

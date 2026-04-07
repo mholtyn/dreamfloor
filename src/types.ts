@@ -51,7 +51,8 @@ export type PosterLineupRhythmKind =
   | "retro-heavy-underline"
   | "minimal-hairline"
   | "prime-arrow-list"
-  | "gradient-diagonal-list";
+  | "gradient-diagonal-list"
+  | "sunset-inline-clean";
 
 export type PresetConfig = {
   presetId: PresetId;
