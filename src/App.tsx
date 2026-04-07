@@ -48,19 +48,26 @@ function App() {
       <InfoModal open={isInfoModalOpen} onOpenChange={setIsInfoModalOpen} />
 
       <main className="mx-auto w-full max-w-7xl flex-1 p-4 lg:grid lg:grid-cols-[minmax(300px,480px)_1fr] lg:items-start lg:gap-8 lg:p-8">
-        <div className="order-1 space-y-4 lg:order-2 lg:space-y-6">
+        <div className="order-1 lg:order-2 lg:space-y-6">
           <PresetSelector
             selectedPresetId={selectedPresetId}
             onSelectPreset={setSelectedPresetId}
           />
-          <LineupBuilder lineupSlots={lineupSlots} onSlotsChange={setLineupSlots} />
-          <ExportActions
-            isLineupValid={isLineupValid}
-            onLineupCountIncremented={setGlobalLineupCount}
-          />
+
+          <div className="mt-4 lg:hidden">
+            <PosterPreview presetId={selectedPresetId} lineupSlots={lineupSlots} />
+          </div>
+
+          <div className="mt-4 space-y-4 lg:mt-0 lg:space-y-6">
+            <LineupBuilder lineupSlots={lineupSlots} onSlotsChange={setLineupSlots} />
+            <ExportActions
+              isLineupValid={isLineupValid}
+              onLineupCountIncremented={setGlobalLineupCount}
+            />
+          </div>
         </div>
 
-        <div className="order-2 mt-6 lg:order-1 lg:mt-0 lg:self-start">
+        <div className="hidden lg:block lg:self-start">
           <div className="lg:sticky lg:top-20">
             <PosterPreview presetId={selectedPresetId} lineupSlots={lineupSlots} />
           </div>
