@@ -285,7 +285,7 @@ function PosterDecorativeOverlay({ presetConfig }: { presetConfig: PresetConfig 
             />
             {/* Bottom flowing curve */}
             <path
-              d="M-15 385 C25 372,60 398,110 385 C160 370,200 393,250 382 C280 376,300 388,315 383"
+              d="M-15 377 C25 364,60 390,110 377 C160 362,200 385,250 374 C280 368,300 380,315 375"
               fill="none"
               stroke="#7c3aed"
               strokeWidth="1.2"
@@ -799,6 +799,12 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
             )}
           </div>
         </div>
+        <p
+          className="absolute inset-x-0 bottom-1.5 z-10 text-center text-[0.32rem] uppercase tracking-[0.2em] opacity-30 sm:bottom-2 sm:text-[0.36rem]"
+          style={{ color: presetConfig.textColor }}
+        >
+          This event is fictional &middot; Generated on dreamfloor.app
+        </p>
       </div>
     </div>
   );
