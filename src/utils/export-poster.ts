@@ -9,8 +9,20 @@ export type ShareOutcome =
   | "downloaded_as_fallback"
   | "failed";
 
-export async function capturePosterAsBlob(): Promise<Blob | null> {
+function getPosterElementForExport(): HTMLElement | null {
   const posterElement = document.getElementById(POSTER_ELEMENT_ID);
+  if (!(posterElement instanceof HTMLElement)) {
+    return null;
+  }
+  const boundingRectangle = posterElement.getBoundingClientRect();
+  if (boundingRectangle.width <= 0 || boundingRectangle.height <= 0) {
+    return null;
+  }
+  return posterElement;
+}
+
+export async function capturePosterAsBlob(): Promise<Blob | null> {
+  const posterElement = getPosterElementForExport();
   if (!posterElement) return null;
 
   const blob = await toBlob(posterElement, {

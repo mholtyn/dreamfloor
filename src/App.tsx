@@ -60,30 +60,31 @@ function App() {
       />
       <InfoModal open={isInfoModalOpen} onOpenChange={setIsInfoModalOpen} />
 
-      <main className="mx-auto w-full max-w-7xl flex-1 p-4 lg:grid lg:grid-cols-[minmax(300px,480px)_1fr] lg:items-start lg:gap-8 lg:p-8">
-        <div className="order-1 lg:order-2 lg:space-y-6">
+      {/*
+        Single PosterPreview only: two instances duplicated id="poster-preview" and
+        repeated SVG gradient ids (e.g. prime-blob-a), breaking html-to-image export
+        and Prime preset artwork. Mobile order: preset → poster → lineup → export.
+      */}
+      <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-4 p-4 lg:grid lg:grid-cols-[minmax(300px,480px)_1fr] lg:items-start lg:gap-8 lg:p-8">
+        <div className="order-2 lg:col-start-1 lg:row-start-1 lg:row-span-3 lg:self-start">
+          <div className="lg:sticky lg:top-20">
+            <PosterPreview presetId={selectedPresetId} lineupSlots={lineupSlots} />
+          </div>
+        </div>
+
+        <div className="order-1 space-y-4 lg:col-start-2 lg:row-start-1 lg:space-y-6">
           <PresetSelector
             selectedPresetId={selectedPresetId}
             onSelectPreset={setSelectedPresetId}
           />
-
-          <div className="mt-4 lg:hidden">
-            <PosterPreview presetId={selectedPresetId} lineupSlots={lineupSlots} />
-          </div>
-
-          <div className="mt-4 space-y-4 lg:mt-0 lg:space-y-6">
-            <LineupBuilder lineupSlots={lineupSlots} onSlotsChange={setLineupSlots} />
-            <ExportActions
-              isLineupValid={isLineupValid}
-              onLineupCountIncremented={setGlobalLineupCount}
-            />
-          </div>
         </div>
 
-        <div className="hidden lg:block lg:self-start">
-          <div className="lg:sticky lg:top-20">
-            <PosterPreview presetId={selectedPresetId} lineupSlots={lineupSlots} />
-          </div>
+        <div className="order-3 space-y-4 lg:col-start-2 lg:row-start-2 lg:space-y-6">
+          <LineupBuilder lineupSlots={lineupSlots} onSlotsChange={setLineupSlots} />
+          <ExportActions
+            isLineupValid={isLineupValid}
+            onLineupCountIncremented={setGlobalLineupCount}
+          />
         </div>
       </main>
     </div>

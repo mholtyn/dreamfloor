@@ -47,19 +47,13 @@ function getLineupTypographyClasses(slotCount: number) {
   return POSTER_LINEUP_TYPOGRAPHY_COMPACT;
 }
 
-function getTitleTextShadow(presetConfig: PresetConfig): string | undefined {
-  switch (presetConfig.presetId) {
-    case "gradient":
-      return `0 0 22px ${presetConfig.titleColor}`;
-    case "prime":
-      return `0 0 20px ${presetConfig.titleColor}, 0 0 10px ${presetConfig.subtitleColor}`;
-    case "industrial":
-      return `0 0 12px ${presetConfig.accentColor}88, 0 0 28px ${presetConfig.accentColor}44`;
-    case "minimal":
-      return `0 0 12px ${presetConfig.titleColor}, 0 0 2px #fff`;
-    default:
-      return undefined;
-  }
+/**
+ * Title text-shadow was wired to old preset id strings (`neon`, `pulse`, …) that no
+ * longer exist on `PresetId`, so at runtime every case fell through and no shadow
+ * applied. Do not map those legacy strings onto current presets without a design pass.
+ */
+function getTitleTextShadow(_presetConfig: PresetConfig): string | undefined {
+  return undefined;
 }
 
 function PosterDecorativeOverlay({ presetConfig }: { presetConfig: PresetConfig }) {
@@ -188,6 +182,10 @@ function PosterDecorativeOverlay({ presetConfig }: { presetConfig: PresetConfig 
       );
     case "prime-flyer-slab": {
       const primeGrainId = `prime-grain-${grainFilterDomId}`;
+      const primeBlobGradientIdA = `${grainFilterDomId}-prime-blob-a`;
+      const primeBlobGradientIdB = `${grainFilterDomId}-prime-blob-b`;
+      const primeBlobGradientIdC = `${grainFilterDomId}-prime-blob-c`;
+      const primeBlobGradientIdD = `${grainFilterDomId}-prime-blob-d`;
       return (
         <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
           {/* Complex organic blob cluster — right side */}
@@ -198,20 +196,20 @@ function PosterDecorativeOverlay({ presetConfig }: { presetConfig: PresetConfig 
           >
             <title>Decorative shapes</title>
             <defs>
-              <linearGradient id="prime-blob-a" x1="0" y1="0" x2="0.8" y2="1">
+              <linearGradient id={primeBlobGradientIdA} x1="0" y1="0" x2="0.8" y2="1">
                 <stop offset="0%" stopColor="#7c3aed" />
                 <stop offset="60%" stopColor="#4f46e5" />
                 <stop offset="100%" stopColor="#1e1b4b" />
               </linearGradient>
-              <linearGradient id="prime-blob-b" x1="1" y1="0" x2="0" y2="1">
+              <linearGradient id={primeBlobGradientIdB} x1="1" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#8b5cf6" />
                 <stop offset="100%" stopColor="#312e81" stopOpacity="0.4" />
               </linearGradient>
-              <radialGradient id="prime-blob-c" cx="0.4" cy="0.35" r="0.65">
+              <radialGradient id={primeBlobGradientIdC} cx="0.4" cy="0.35" r="0.65">
                 <stop offset="0%" stopColor="#a78bfa" stopOpacity="0.9" />
                 <stop offset="100%" stopColor="#1e1b4b" stopOpacity="0.3" />
               </radialGradient>
-              <linearGradient id="prime-blob-d" x1="0.2" y1="0" x2="0.9" y2="1">
+              <linearGradient id={primeBlobGradientIdD} x1="0.2" y1="0" x2="0.9" y2="1">
                 <stop offset="0%" stopColor="#6d28d9" stopOpacity="0.7" />
                 <stop offset="100%" stopColor="#7c3aed" stopOpacity="0.2" />
               </linearGradient>
@@ -219,30 +217,30 @@ function PosterDecorativeOverlay({ presetConfig }: { presetConfig: PresetConfig 
             {/* Main large blob */}
             <path
               d="M130 15 C170 8,210 45,215 90 C220 135,240 160,225 205 C210 250,185 280,145 295 C105 310,65 290,45 255 C25 220,8 185,15 145 C22 105,35 75,60 50 C85 25,100 22,130 15Z"
-              fill="url(#prime-blob-a)"
+              fill={`url(#${primeBlobGradientIdA})`}
             />
             {/* Overlapping secondary blob — offset, different shape */}
             <path
               d="M160 55 C195 48,225 80,228 120 C231 160,220 200,195 225 C170 250,135 245,115 220 C95 195,85 160,95 125 C105 90,130 62,160 55Z"
-              fill="url(#prime-blob-b)"
+              fill={`url(#${primeBlobGradientIdB})`}
               opacity="0.6"
             />
             {/* Small accent blob — top */}
             <path
               d="M90 5 C110 -2,130 15,125 35 C120 55,100 62,82 52 C64 42,70 12,90 5Z"
-              fill="url(#prime-blob-c)"
+              fill={`url(#${primeBlobGradientIdC})`}
               opacity="0.5"
             />
             {/* Mid-left tendril blob — adds asymmetry */}
             <path
               d="M30 120 C15 135,5 165,18 195 C31 225,55 218,60 192 C65 166,50 140,30 120Z"
-              fill="url(#prime-blob-d)"
+              fill={`url(#${primeBlobGradientIdD})`}
               opacity="0.45"
             />
             {/* Bottom-right organic smear */}
             <path
               d="M175 260 C205 255,235 275,232 305 C229 335,200 345,180 330 C160 315,148 280,175 260Z"
-              fill="url(#prime-blob-c)"
+              fill={`url(#${primeBlobGradientIdC})`}
               opacity="0.35"
             />
             {/* Floating dot-blobs */}
@@ -261,7 +259,7 @@ function PosterDecorativeOverlay({ presetConfig }: { presetConfig: PresetConfig 
             <title>Secondary blobs</title>
             <path
               d="M60 10 C85 5,110 30,105 58 C100 86,80 110,55 108 C30 106,8 82,12 55 C16 28,35 15,60 10Z"
-              fill="url(#prime-blob-b)"
+              fill={`url(#${primeBlobGradientIdB})`}
             />
             <circle cx="90" cy="25" r="14" fill="#8b5cf6" opacity="0.5" />
             <ellipse cx="30" cy="95" rx="16" ry="12" fill="#6d28d9" opacity="0.4" />
