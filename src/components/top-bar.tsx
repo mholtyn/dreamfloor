@@ -14,10 +14,17 @@ export function TopBar({ onInfoClick, globalLineupCount }: TopBarProps) {
           Dreamfloor
         </span>
       </div>
-      <div className="flex items-center gap-2">
-        <span className="text-xs text-muted-foreground sm:text-sm">
-          Generated globally: {globalLineupCount ?? "..."}
-        </span>
+      <div className="flex items-center gap-3">
+        {globalLineupCount !== null && (
+          <div className="flex items-center gap-1.5 rounded-full border border-border/50 bg-muted/50 px-3 py-1">
+            <span className="text-sm font-semibold tabular-nums">
+              {globalLineupCount.toLocaleString()}
+            </span>
+            <span className="text-[0.65rem] uppercase tracking-wider text-muted-foreground">
+              posters created
+            </span>
+          </div>
+        )}
         <Button variant="ghost" size="icon" onClick={onInfoClick}>
           <Info className="size-4" />
           <span className="sr-only">About Dreamfloor</span>
