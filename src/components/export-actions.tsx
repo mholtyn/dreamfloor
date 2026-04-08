@@ -3,6 +3,7 @@ import { Check, Download, Loader2, Share2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { incrementLineupCount } from "@/lib/dreamfloorApi";
+import { posthog } from "@/lib/posthog";
 import {
   capturePosterAsBlob,
   downloadBlob,
@@ -38,11 +39,14 @@ export function ExportActions({
       } catch {
         toast.message("PNG exported, but global counter update failed.");
       }
+      posthog.capture("poster_exported");
       setExportSucceeded(true);
       toast.success("PNG downloaded.");
       setTimeout(() => setExportSucceeded(false), 3000);
     } catch (exportError) {
       console.error("[ExportActions] export failed:", exportError);
+      posthog.captureException(exportError);
+      posthog.capture("export_failed", { action: "export_png" });
       toast.error("Export failed. Please try again.");
     } finally {
       setIsExporting(false);
@@ -60,6 +64,7 @@ export function ExportActions({
 
       const shareOutcome = await sharePosterBlob(posterBlob);
       if (shareOutcome === "shared_via_native_dialog") {
+        posthog.capture("poster_shared");
         setShareSucceeded(true);
         toast.success("Shared via native share dialog.");
         setTimeout(() => setShareSucceeded(false), 3000);
@@ -67,12 +72,15 @@ export function ExportActions({
       }
 
       if (shareOutcome === "downloaded_as_fallback") {
+        posthog.capture("poster_share_downloaded_as_fallback");
         toast.message("Native share not available. PNG downloaded instead.");
         return;
       }
 
       toast.error("Share failed. Please try again.");
-    } catch {
+    } catch (shareError) {
+      posthog.captureException(shareError);
+      posthog.capture("export_failed", { action: "share" });
       toast.error("Share failed. Please try again.");
     } finally {
       setIsSharing(false);

@@ -33,3 +33,5 @@ reference
 
 # notes - agentic context
 /notes
+.env
+/.claude

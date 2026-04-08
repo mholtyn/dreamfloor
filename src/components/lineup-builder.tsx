@@ -11,6 +11,7 @@ import {
 import { ArtistAutocomplete } from "@/components/artist-autocomplete";
 import { TECHNO_ARTISTS } from "@/data/artists";
 import { suggestArtist } from "@/lib/dreamfloorApi";
+import { posthog } from "@/lib/posthog";
 import type { LineupSlot } from "@/types";
 import { ALL_NIGHT_LONG_DURATION_MINUTES_SENTINEL } from "@/utils/time";
 
@@ -60,12 +61,14 @@ export function LineupBuilder({ lineupSlots, onSlotsChange }: LineupBuilderProps
         { artistName: "", durationMinutes: DEFAULT_DURATION_MINUTES },
         { artistName: "", durationMinutes: DEFAULT_DURATION_MINUTES },
       ]);
+      posthog.capture("artist_slot_added", { slot_count_after: 2 });
       return;
     }
     onSlotsChange([
       ...lineupSlots,
       { artistName: "", durationMinutes: DEFAULT_DURATION_MINUTES },
     ]);
+    posthog.capture("artist_slot_added", { slot_count_after: lineupSlots.length + 1 });
   }
 
   function handleRemoveSlot(removeIndex: number) {
@@ -75,6 +78,7 @@ export function LineupBuilder({ lineupSlots, onSlotsChange }: LineupBuilderProps
     onSlotsChange(
       lineupSlots.filter((_, slotIndex) => slotIndex !== removeIndex),
     );
+    posthog.capture("artist_slot_removed", { slot_count_after: lineupSlots.length - 1 });
   }
 
   function handleArtistNameChange(slotIndex: number, nextArtistName: string) {
@@ -107,8 +111,10 @@ export function LineupBuilder({ lineupSlots, onSlotsChange }: LineupBuilderProps
   async function handleSuggestArtist(artistName: string): Promise<void> {
     try {
       const suggestionCount = await suggestArtist(artistName);
+      posthog.capture("artist_suggested", { artist_name: artistName, suggestion_count: suggestionCount });
       toast.success(`Thanks! "${artistName}" suggested (${suggestionCount} total).`);
-    } catch {
+    } catch (err) {
+      posthog.captureException(err);
       toast.error("Failed to send suggestion. Try again.");
     }
   }

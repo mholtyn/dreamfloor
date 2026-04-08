@@ -1,5 +1,6 @@
 import { Check } from "lucide-react";
 import { PRESET_CONFIGS } from "../data/presets";
+import { posthog } from "@/lib/posthog";
 import type { PresetId } from "@/types";
 import { cn } from "@/lib/utils";
 
@@ -28,7 +29,13 @@ export function PresetSelector({
                   ? "border-purple-600 ring-2 ring-purple-600 ring-offset-2"
                   : "border-border hover:border-muted-foreground/40",
               )}
-              onClick={() => onSelectPreset(presetConfig.presetId)}
+              onClick={() => {
+                posthog.capture("preset_selected", {
+                  preset_id: presetConfig.presetId,
+                  preset_name: presetConfig.displayName,
+                });
+                onSelectPreset(presetConfig.presetId);
+              }}
               aria-pressed={isSelected}
             >
               <div

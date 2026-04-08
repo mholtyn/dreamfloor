@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { TECHNO_ARTISTS } from "@/data/artists";
+import { posthog } from "@/lib/posthog";
 import { cn } from "@/lib/utils";
 
 const MAX_VISIBLE_SUGGESTIONS = 6;
@@ -44,6 +45,7 @@ export function ArtistAutocomplete({
   }
 
   function handleSelectSuggestion(artistName: string) {
+    posthog.capture("artist_selected_from_autocomplete", { artist_name: artistName });
     onChangeArtistName(artistName);
     setIsSuggestionsOpen(false);
   }

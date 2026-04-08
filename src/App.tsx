@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ExportActions } from "@/components/export-actions";
 import { InfoModal } from "@/components/info-modal";
 import { LineupBuilder, MINIMUM_LINEUP_SLOT_COUNT } from "@/components/lineup-builder";
@@ -6,6 +6,7 @@ import { PosterPreview } from "@/components/poster-preview";
 import { PresetSelector } from "@/components/preset-selector";
 import { TopBar } from "@/components/top-bar";
 import { fetchLineupCount } from "@/lib/dreamfloorApi";
+import { posthog } from "@/lib/posthog";
 import type { LineupSlot, PresetId } from "@/types";
 
 const INITIAL_PRESET_ID: PresetId = "prime";
@@ -20,6 +21,7 @@ function App() {
   const [selectedPresetId, setSelectedPresetId] = useState<PresetId>(INITIAL_PRESET_ID);
   const [lineupSlots, setLineupSlots] = useState<LineupSlot[]>(INITIAL_LINEUP_SLOTS);
   const [globalLineupCount, setGlobalLineupCount] = useState<number | null>(null);
+  const hasTrackedAppOpenRef = useRef(false);
 
   const filledArtistCount = lineupSlots.filter(
     (slot) => slot.artistName.trim().length > 0,
@@ -39,10 +41,21 @@ function App() {
     void loadLineupCount();
   }, []);
 
+  useEffect(() => {
+    if (hasTrackedAppOpenRef.current) {
+      return;
+    }
+    hasTrackedAppOpenRef.current = true;
+    posthog.capture("app_open");
+  }, []);
+
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
       <TopBar
-        onInfoClick={() => setIsInfoModalOpen(true)}
+        onInfoClick={() => {
+          posthog.capture("info_modal_opened");
+          setIsInfoModalOpen(true);
+        }}
         globalLineupCount={globalLineupCount}
       />
       <InfoModal open={isInfoModalOpen} onOpenChange={setIsInfoModalOpen} />
