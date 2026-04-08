@@ -30,3 +30,6 @@ reference
 .env.*
 .vercel
 .env*.local
+
+# notes - agentic context
+/notes

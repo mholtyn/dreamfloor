@@ -55,8 +55,10 @@ export function InfoModal({ open, onOpenChange }: InfoModalProps) {
           <section>
             <h3 className="mb-1 font-semibold">Privacy</h3>
             <p className="text-muted-foreground">
-              Your lineup data stays in your browser. Nothing is stored on our
-              servers.
+              Your lineup content stays in your browser and is not stored on our
+              application servers. We use privacy-conscious analytics for
+              anonymous usage events (such as page visits and export clicks) to
+              improve the app. We do not collect lineup text in analytics.
             </p>
           </section>
         </div>
