@@ -49,13 +49,13 @@ function getLineupTypographyClasses(slotCount: number) {
 
 function getTitleTextShadow(presetConfig: PresetConfig): string | undefined {
   switch (presetConfig.presetId) {
-    case "neon":
+    case "gradient":
       return `0 0 22px ${presetConfig.titleColor}`;
-    case "pulse":
+    case "prime":
       return `0 0 20px ${presetConfig.titleColor}, 0 0 10px ${presetConfig.subtitleColor}`;
     case "industrial":
       return `0 0 12px ${presetConfig.accentColor}88, 0 0 28px ${presetConfig.accentColor}44`;
-    case "dark-rave":
+    case "minimal":
       return `0 0 12px ${presetConfig.titleColor}, 0 0 2px #fff`;
     default:
       return undefined;
