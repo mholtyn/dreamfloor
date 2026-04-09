@@ -1,8 +1,11 @@
 import { Redis } from "@upstash/redis";
 
-const redisClient = Redis.fromEnv({ enableAutoPipelining: false });
-
 const globalCounterKey = "dreamfloor:global_lineup_counter";
+const redisRequestTimeoutMilliseconds = 2500;
+const redisClient = Redis.fromEnv({
+  enableAutoPipelining: false,
+  signal: () => AbortSignal.timeout(redisRequestTimeoutMilliseconds),
+});
 
 function jsonResponse(body: unknown, status: number = 200): Response {
   return new Response(JSON.stringify(body), {
@@ -14,16 +17,52 @@ function jsonResponse(body: unknown, status: number = 200): Response {
   });
 }
 
+async function withTimeout<ValueType>(
+  promise: Promise<ValueType>,
+  operationName: string,
+): Promise<ValueType> {
+  let timeoutId: ReturnType<typeof setTimeout> | null = null;
+
+  try {
+    return await Promise.race([
+      promise,
+      new Promise<ValueType>((_resolve, reject) => {
+        timeoutId = setTimeout(() => {
+          reject(new Error(`${operationName} timed out.`));
+        }, redisRequestTimeoutMilliseconds);
+      }),
+    ]);
+  } finally {
+    if (timeoutId !== null) {
+      clearTimeout(timeoutId);
+    }
+  }
+}
+
 export default async function handler(req: Request): Promise<Response> {
   if (req.method === "GET") {
-    const currentCount =
-      (await redisClient.get<number>(globalCounterKey)) ?? 0;
-    return jsonResponse({ count: currentCount });
+    try {
+      const currentCount =
+        (await withTimeout(
+          redisClient.get<number>(globalCounterKey),
+          "lineup-count GET",
+        )) ?? 0;
+      return jsonResponse({ count: currentCount });
+    } catch {
+      return jsonResponse({ count: 0, degraded: true }, 200);
+    }
   }
 
   if (req.method === "POST") {
-    const nextCount = await redisClient.incr(globalCounterKey);
-    return jsonResponse({ count: nextCount });
+    try {
+      const nextCount = await withTimeout(
+        redisClient.incr(globalCounterKey),
+        "lineup-count POST",
+      );
+      return jsonResponse({ count: nextCount });
+    } catch {
+      return jsonResponse({ count: 0, degraded: true }, 200);
+    }
   }
 
   return jsonResponse({ error: "Method not allowed." }, 405);

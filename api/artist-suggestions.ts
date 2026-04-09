@@ -1,9 +1,12 @@
 import { Redis } from "@upstash/redis";
 
-const redisClient = Redis.fromEnv({ enableAutoPipelining: false });
-
 const suggestionHashKeyPrefix = "dreamfloor:artist_suggestion:";
 const suggestionSortedSetKey = "dreamfloor:artist_suggestion_by_count";
+const redisRequestTimeoutMilliseconds = 2500;
+const redisClient = Redis.fromEnv({
+    enableAutoPipelining: false,
+    signal: () => AbortSignal.timeout(redisRequestTimeoutMilliseconds),
+});
 
 function jsonResponse(body: unknown, status: number = 200): Response {
     return new Response(JSON.stringify(body), {
@@ -13,6 +16,28 @@ function jsonResponse(body: unknown, status: number = 200): Response {
             "cache-control": "no-store",
         },
     });
+}
+
+async function withTimeout<ValueType>(
+    promise: Promise<ValueType>,
+    operationName: string,
+): Promise<ValueType> {
+    let timeoutIdentifier: ReturnType<typeof setTimeout> | null = null;
+
+    try {
+        return await Promise.race([
+            promise,
+            new Promise<ValueType>((_resolve, reject) => {
+                timeoutIdentifier = setTimeout(() => {
+                    reject(new Error(`${operationName} timed out.`));
+                }, redisRequestTimeoutMilliseconds);
+            }),
+        ]);
+    } finally {
+        if (timeoutIdentifier !== null) {
+            clearTimeout(timeoutIdentifier);
+        }
+    }
 }
 
 function normalizeArtistName(artistNameRaw: string): string {
@@ -66,22 +91,37 @@ export default async function handler(req: Request): Promise<Response> {
     const normalizedArtistName = normalizeArtistName(validatedArtistName);
     const suggestionHashKey = `${suggestionHashKeyPrefix}${normalizedArtistName}`;
 
-    const nextSuggestionCount = await redisClient.hincrby(
-        suggestionHashKey,
-        "count",
-        1,
-    );
+    let nextSuggestionCount: number | string;
+    try {
+        nextSuggestionCount = await withTimeout(
+            redisClient.hincrby(suggestionHashKey, "count", 1),
+            "artist-suggestions HINCRBY",
+        );
 
-    await redisClient.hset(suggestionHashKey, {
-        latestOriginalName: validatedArtistName,
-        normalizedName: normalizedArtistName,
-        updatedAtIso: new Date().toISOString(),
-    });
+        await withTimeout(
+            redisClient.hset(suggestionHashKey, {
+                latestOriginalName: validatedArtistName,
+                normalizedName: normalizedArtistName,
+                updatedAtIso: new Date().toISOString(),
+            }),
+            "artist-suggestions HSET",
+        );
 
-    await redisClient.zadd(suggestionSortedSetKey, {
-        score: Number(nextSuggestionCount),
-        member: normalizedArtistName,
-    });
+        await withTimeout(
+            redisClient.zadd(suggestionSortedSetKey, {
+                score: Number(nextSuggestionCount),
+                member: normalizedArtistName,
+            }),
+            "artist-suggestions ZADD",
+        );
+    } catch {
+        return jsonResponse({
+            ok: false,
+            degraded: true,
+            normalizedArtistName: normalizedArtistName,
+            count: 0,
+        });
+    }
 
     return jsonResponse({
         ok: true,
