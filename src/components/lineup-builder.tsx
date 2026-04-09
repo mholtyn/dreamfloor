@@ -19,6 +19,7 @@ import { ALL_NIGHT_LONG_DURATION_MINUTES_SENTINEL } from "@/utils/time";
 export const MINIMUM_LINEUP_SLOT_COUNT = 2;
 const MAXIMUM_SLOT_COUNT = 5;
 const DEFAULT_DURATION_MINUTES = 120;
+const LINEUP_PLACEHOLDER_ARTIST_NAME = "tba";
 
 const DURATION_OPTIONS = [
   { value: 60, label: "60 min" },
@@ -119,6 +120,10 @@ export function LineupBuilder({ lineupSlots, onSlotsChange }: LineupBuilderProps
     }
   }
 
+  function isPlaceholderArtistName(artistNameRaw: string): boolean {
+    return artistNameRaw.trim().toLowerCase() === LINEUP_PLACEHOLDER_ARTIST_NAME;
+  }
+
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
@@ -185,6 +190,7 @@ export function LineupBuilder({ lineupSlots, onSlotsChange }: LineupBuilderProps
                   />
 
                   {slot.artistName.trim().length > 0 &&
+                    !isPlaceholderArtistName(slot.artistName) &&
                     !TECHNO_ARTISTS.some(
                       (artistName) =>
                         artistName.toLowerCase() === slot.artistName.trim().toLowerCase(),

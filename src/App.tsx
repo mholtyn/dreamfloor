@@ -11,9 +11,9 @@ import type { LineupSlot, PresetId } from "@/types";
 
 const INITIAL_PRESET_ID: PresetId = "prime";
 const INITIAL_LINEUP_SLOTS: LineupSlot[] = [
-  { artistName: "Charlotte de Witte", durationMinutes: 120 },
-  { artistName: "Amelie Lens", durationMinutes: 90 },
-  { artistName: "Adam Beyer", durationMinutes: 120 },
+  { artistName: "TBA", durationMinutes: 120 },
+  { artistName: "TBA", durationMinutes: 90 },
+  { artistName: "TBA", durationMinutes: 120 },
 ];
 
 function App() {

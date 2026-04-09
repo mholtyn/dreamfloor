@@ -15,7 +15,7 @@ type InfoModalProps = {
 export function InfoModal({ open, onOpenChange }: InfoModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md gap-4 sm:gap-4">
+      <DialogContent className="max-h-[90dvh] max-w-md gap-4 overflow-y-auto sm:gap-4">
         <DialogHeader>
           <DialogTitle>About Dreamfloor</DialogTitle>
           <DialogDescription>
