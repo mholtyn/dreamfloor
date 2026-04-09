@@ -1,8 +1,22 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Plugin } from "vite";
 
+type LocalApiResponseBody = string | Buffer | Record<string, unknown>;
+type LocalApiResponse = ServerResponse & {
+  status: (statusCode: number) => LocalApiResponse;
+  json: (jsonBody: unknown) => LocalApiResponse;
+  send: (responseBody: LocalApiResponseBody) => LocalApiResponse;
+};
+type LocalApiRequest = IncomingMessage & {
+  query: Record<string, string>;
+};
+type WebApiHandler = (request: Request) => Response | Promise<Response>;
+type NodeApiHandler = (
+  requestObject: LocalApiRequest,
+  responseObject: LocalApiResponse,
+) => void | Promise<void>;
 type ApiHandlerModule = {
-  default: (request: Request) => Response | Promise<Response>;
+  default: WebApiHandler | NodeApiHandler;
 };
 
 const apiRouteLoaders: Record<string, () => Promise<ApiHandlerModule>> = {
@@ -43,12 +57,22 @@ export function dreamfloorLocalApiPlugin(): Plugin {
           }
 
           try {
+            const handlerModule = await loadHandlerModule();
+            const apiHandler = handlerModule.default;
+            if (isNodeApiHandler(apiHandler)) {
+              const localApiRequest = Object.assign(incomingRequest, {
+                query: Object.fromEntries(requestUrl.searchParams.entries()),
+              }) as LocalApiRequest;
+              const localApiResponse = createLocalApiResponse(serverResponse);
+              await apiHandler(localApiRequest, localApiResponse);
+              return;
+            }
+
             const webRequest = await incomingMessageToWebRequest(
               incomingRequest,
               requestUrl.href,
             );
-            const handlerModule = await loadHandlerModule();
-            const webResponse = await handlerModule.default(webRequest);
+            const webResponse = await apiHandler(webRequest);
             await sendNodeResponseFromWebResponse(serverResponse, webResponse);
           } catch (error) {
             const message = error instanceof Error ? error.message : String(error);
@@ -80,6 +104,33 @@ async function incomingMessageToWebRequest(
     headers: incomingRequest.headers as Record<string, string>,
     body: requestBodyBuffer.length > 0 ? requestBodyBuffer : undefined,
   });
+}
+
+function createLocalApiResponse(serverResponse: ServerResponse): LocalApiResponse {
+  const responseObject = serverResponse as LocalApiResponse;
+  responseObject.status = (statusCode: number): LocalApiResponse => {
+    responseObject.statusCode = statusCode;
+    return responseObject;
+  };
+  responseObject.json = (jsonBody: unknown): LocalApiResponse => {
+    responseObject.setHeader("content-type", "application/json; charset=utf-8");
+    responseObject.end(JSON.stringify(jsonBody));
+    return responseObject;
+  };
+  responseObject.send = (responseBody: LocalApiResponseBody): LocalApiResponse => {
+    if (typeof responseBody === "string" || Buffer.isBuffer(responseBody)) {
+      responseObject.end(responseBody);
+    } else {
+      responseObject.setHeader("content-type", "application/json; charset=utf-8");
+      responseObject.end(JSON.stringify(responseBody));
+    }
+    return responseObject;
+  };
+  return responseObject;
+}
+
+function isNodeApiHandler(handler: WebApiHandler | NodeApiHandler): handler is NodeApiHandler {
+  return handler.length >= 2;
 }
 
 async function readIncomingMessageBody(

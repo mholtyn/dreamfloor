@@ -1,4 +1,13 @@
+import type { IncomingMessage, ServerResponse } from "node:http";
 import { Redis } from "@upstash/redis";
+
+type NodeApiRequest = IncomingMessage & {
+  method?: string;
+};
+type NodeApiResponse = ServerResponse & {
+  status: (statusCode: number) => NodeApiResponse;
+  json: (jsonBody: unknown) => NodeApiResponse;
+};
 
 const globalCounterKey = "dreamfloor:global_lineup_counter";
 const redisRequestTimeoutMilliseconds = 2500;
@@ -7,14 +16,13 @@ const redisClient = Redis.fromEnv({
   signal: () => AbortSignal.timeout(redisRequestTimeoutMilliseconds),
 });
 
-function jsonResponse(body: unknown, status: number = 200): Response {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: {
-      "content-type": "application/json",
-      "cache-control": "no-store",
-    },
-  });
+function sendJsonResponse(
+  responseObject: NodeApiResponse,
+  responseBody: unknown,
+  statusCode: number = 200,
+): void {
+  responseObject.setHeader("cache-control", "no-store");
+  responseObject.status(statusCode).json(responseBody);
 }
 
 async function withTimeout<ValueType>(
@@ -39,31 +47,38 @@ async function withTimeout<ValueType>(
   }
 }
 
-export default async function handler(req: Request): Promise<Response> {
-  if (req.method === "GET") {
+export default async function handler(
+  requestObject: NodeApiRequest,
+  responseObject: NodeApiResponse,
+): Promise<void> {
+  if (requestObject.method === "GET") {
     try {
       const currentCount =
         (await withTimeout(
           redisClient.get<number>(globalCounterKey),
           "lineup-count GET",
         )) ?? 0;
-      return jsonResponse({ count: currentCount });
+      sendJsonResponse(responseObject, { count: currentCount });
+      return;
     } catch {
-      return jsonResponse({ count: 0, degraded: true }, 200);
+      sendJsonResponse(responseObject, { count: 0, degraded: true }, 200);
+      return;
     }
   }
 
-  if (req.method === "POST") {
+  if (requestObject.method === "POST") {
     try {
       const nextCount = await withTimeout(
         redisClient.incr(globalCounterKey),
         "lineup-count POST",
       );
-      return jsonResponse({ count: nextCount });
+      sendJsonResponse(responseObject, { count: nextCount });
+      return;
     } catch {
-      return jsonResponse({ count: 0, degraded: true }, 200);
+      sendJsonResponse(responseObject, { count: 0, degraded: true }, 200);
+      return;
     }
   }
 
-  return jsonResponse({ error: "Method not allowed." }, 405);
+  sendJsonResponse(responseObject, { error: "Method not allowed." }, 405);
 }

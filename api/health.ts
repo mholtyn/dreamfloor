@@ -1,10 +1,16 @@
+import type { IncomingMessage, ServerResponse } from "node:http";
+
+type NodeApiRequest = IncomingMessage;
+type NodeApiResponse = ServerResponse & {
+  status: (statusCode: number) => NodeApiResponse;
+  json: (jsonBody: unknown) => NodeApiResponse;
+};
+
 /** GET /api/health — liveness check (also used by Vite dev plugin). */
-export default async function handler(_request: Request): Promise<Response> {
-  return new Response(JSON.stringify({ ok: true }), {
-    status: 200,
-    headers: {
-      "content-type": "application/json; charset=utf-8",
-      "cache-control": "no-store",
-    },
-  });
+export default async function handler(
+  _requestObject: NodeApiRequest,
+  responseObject: NodeApiResponse,
+): Promise<void> {
+  responseObject.setHeader("cache-control", "no-store");
+  responseObject.status(200).json({ ok: true });
 }
