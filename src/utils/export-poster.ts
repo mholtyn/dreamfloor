@@ -60,7 +60,7 @@ export async function sharePosterBlob(blob: Blob): Promise<ShareOutcome> {
     await navigator.share({
       files: [posterFile],
       title: "Dreamfloor Lineup",
-      text: "Check out my fictional techno lineup! Created with dreamfloor.io",
+      text: "Check out my fictional techno lineup! Created with dreamfloor.vercel.app",
     });
     return "shared_via_native_dialog";
   } catch {

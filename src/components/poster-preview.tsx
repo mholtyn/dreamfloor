@@ -410,7 +410,7 @@ function PosterDecorativeOverlay({ presetConfig }: { presetConfig: PresetConfig 
           <p
             className="absolute top-7 left-7 text-[0.48rem] font-medium uppercase tracking-[0.25em] text-white/55"
           >
-            presented by dreamfloor.app
+            presented by dreamfloor.vercel.app
           </p>
           {/* Centered DREAMFLOOR title */}
           <div className="absolute inset-x-0 top-18 flex justify-center">
@@ -629,7 +629,7 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
                   className="mt-2 text-[0.5rem] font-medium uppercase tracking-[0.3em]"
                   style={{ color: presetConfig.secondaryTextColor }}
                 >
-                  presented by dreamfloor.app
+                  presented by dreamfloor.vercel.app
                 </p>
               </div>
             ) : (
@@ -647,7 +647,7 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
                   className={cn(presetConfig.subtitleClassName)}
                   style={{ color: presetConfig.subtitleColor }}
                 >
-                  Presented by Dreamfloor.app
+                  Presented by dreamfloor.vercel.app
                 </p>
               </>
             )}
@@ -833,7 +833,7 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
           className="absolute inset-x-0 bottom-2 z-10 text-center text-[0.36rem] uppercase tracking-[0.2em] opacity-30"
           style={{ color: presetConfig.textColor }}
         >
-          This event is fictional &middot; Generated on dreamfloor.app
+          This event is fictional &middot; Generated on dreamfloor.vercel.app
         </p>
       </div>
       </div>
