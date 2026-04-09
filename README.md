@@ -29,6 +29,13 @@ pnpm dev
 | `pnpm preview` | Serves `dist/` only (`/api/*` does not run — see DEV.md) |
 | `pnpm lint` | ESLint |
 
+## API runtime note (important)
+
+- Local `pnpm dev` runs `/api/*` through `vite-plugin-local-api.ts` (local adapter).
+- Production on Vercel runs files from `api/` as Node serverless functions.
+- Keep handlers in `api/` in Node `requestObject, responseObject` style for Vercel compatibility.
+- Do not assume local `/api/*` behavior fully matches production unless both runtimes are aligned.
+
 ## Feedback
 
 For bugs and ideas, open an issue via the **Issues** tab on this project’s GitHub repository.
