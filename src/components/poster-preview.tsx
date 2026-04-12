@@ -740,7 +740,7 @@ export function PosterPreview({ presetId, lineupSlots }: PosterPreviewProps) {
                           <span className="ml-2">
                             {isAllNightLongSlot
                               ? "ALL NIGHT"
-                              : `${startTimeLabel.replace(":", "")} \u2600 ${endTimeLabel.replace(":", "")}`}
+                              : `${startTimeLabel.replace(":", "")} \u2600\uFE0E ${endTimeLabel.replace(":", "")}`}
                           </span>
                         </p>
                       ) : presetConfig.lineupRhythmKind === "gradient-diagonal-list" ? (
