@@ -49,9 +49,9 @@ export function downloadBlob(blob: Blob): void {
   URL.revokeObjectURL(downloadUrl);
 }
 
+/** Fallback paths do not download here so the caller can POST to /api before downloadBlob (iOS Safari). */
 export async function sharePosterBlob(blob: Blob): Promise<ShareOutcome> {
   if (!navigator.share) {
-    downloadBlob(blob);
     return "downloaded_as_fallback";
   }
 
@@ -64,7 +64,6 @@ export async function sharePosterBlob(blob: Blob): Promise<ShareOutcome> {
     });
     return "shared_via_native_dialog";
   } catch {
-    downloadBlob(blob);
     return "downloaded_as_fallback";
   }
 }

@@ -25,6 +25,7 @@ export async function fetchLineupCount(): Promise<number> {
 export async function incrementLineupCount(): Promise<number> {
     const response = await fetch("/api/lineup-count", {
         method: "POST",
+        keepalive: true,
     });
 
     if (!response.ok) {

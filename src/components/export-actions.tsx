@@ -43,10 +43,10 @@ export function ExportActions({
         toast.error("Failed to capture poster. Try again.");
         return;
       }
-      downloadBlob(posterBlob);
       await incrementGlobalLineupCountOrNotifyFailure(
         "PNG exported, but global counter update failed.",
       );
+      downloadBlob(posterBlob);
       posthog.capture("poster_exported");
       setExportSucceeded(true);
       toast.success("PNG downloaded.");
@@ -87,6 +87,7 @@ export function ExportActions({
         await incrementGlobalLineupCountOrNotifyFailure(
           "PNG downloaded, but global counter update failed.",
         );
+        downloadBlob(posterBlob);
         toast.message("Native share not available. PNG downloaded instead.");
         return;
       }
