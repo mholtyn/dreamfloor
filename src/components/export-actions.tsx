@@ -87,29 +87,14 @@ export function ExportActions({
     }
   }
 
+  const isPosterActionInProgress = isExporting || isSharing;
+
   return (
     <div className="space-y-2.5 border-t pt-3 sm:pt-4">
       <Button
-        className="w-full"
+        className="w-full text-base"
         size="lg"
-        disabled={!isLineupValid || isExporting}
-        onClick={handleExportPng}
-      >
-        {isExporting ? (
-          <Loader2 className="size-4 animate-spin" />
-        ) : exportSucceeded ? (
-          <Check className="size-4" />
-        ) : (
-          <Download className="size-4" />
-        )}
-        {isExporting ? "Exporting..." : exportSucceeded ? "Exported!" : "Export PNG"}
-      </Button>
-
-      <Button
-        className="w-full"
-        size="lg"
-        variant="outline"
-        disabled={!isLineupValid || isSharing}
+        disabled={!isLineupValid || isPosterActionInProgress}
         onClick={handleShare}
       >
         {isSharing ? (
@@ -122,14 +107,31 @@ export function ExportActions({
         {isSharing ? "Sharing..." : shareSucceeded ? "Shared!" : "Share"}
       </Button>
 
+      <Button
+        className="w-full text-sm font-normal text-foreground"
+        size="lg"
+        variant="outline"
+        disabled={!isLineupValid || isPosterActionInProgress}
+        onClick={handleExportPng}
+      >
+        {isExporting ? (
+          <Loader2 className="size-4 animate-spin" />
+        ) : exportSucceeded ? (
+          <Check className="size-4" />
+        ) : (
+          <Download className="size-4" />
+        )}
+        {isExporting ? "Exporting..." : exportSucceeded ? "Exported!" : "Export PNG"}
+      </Button>
+
       {!isLineupValid && (
         <p className="text-center text-xs text-muted-foreground">
-          Add at least two artists to enable export
+          Add at least two artists to enable share and export
         </p>
       )}
 
       <p className="text-center text-[11px] text-muted-foreground">
-        Export always downloads PNG. Share uses native share when available.
+        Share uses native share when available. Export always downloads PNG.
       </p>
     </div>
   );
