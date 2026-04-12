@@ -10,7 +10,7 @@ export const PRESET_CONFIGS: PresetConfig[] = [
     subtitleColor: "#5b21b6",
     accentColor: "#5b21b6",
     secondaryTextColor: "#52525b",
-    posterRootClassName: "rounded-lg shadow-2xl",
+    posterRootClassName: "rounded-none shadow-2xl",
     posterInnerClassName: "",
     titleBlockClassName: "",
     titleClassName:
@@ -81,7 +81,7 @@ export const PRESET_CONFIGS: PresetConfig[] = [
     subtitleColor: "#0a0a0a",
     accentColor: "#0a0a0a",
     secondaryTextColor: "#0a0a0a",
-    posterRootClassName: "rounded-[1.75rem] shadow-xl",
+    posterRootClassName: "rounded-none shadow-xl",
     posterInnerClassName: "items-center text-center",
     titleBlockClassName: "",
     titleClassName:
@@ -104,7 +104,7 @@ export const PRESET_CONFIGS: PresetConfig[] = [
     subtitleColor: "#94a3b8",
     accentColor: "#a3e635",
     secondaryTextColor: "#94a3b8",
-    posterRootClassName: "rounded-2xl",
+    posterRootClassName: "rounded-none",
     posterInnerClassName: "",
     titleBlockClassName: "hidden",
     titleClassName: "",
