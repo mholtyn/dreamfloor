@@ -24,6 +24,17 @@ export function ExportActions({
   const [exportSucceeded, setExportSucceeded] = useState(false);
   const [shareSucceeded, setShareSucceeded] = useState(false);
 
+  async function incrementGlobalLineupCountOrNotifyFailure(
+    counterUpdateFailureMessage: string,
+  ): Promise<void> {
+    try {
+      const nextGlobalLineupCount = await incrementLineupCount();
+      onLineupCountIncremented?.(nextGlobalLineupCount);
+    } catch {
+      toast.message(counterUpdateFailureMessage);
+    }
+  }
+
   async function handleExportPng() {
     setIsExporting(true);
     try {
@@ -33,12 +44,9 @@ export function ExportActions({
         return;
       }
       downloadBlob(posterBlob);
-      try {
-        const incrementedLineupCount = await incrementLineupCount();
-        onLineupCountIncremented?.(incrementedLineupCount);
-      } catch {
-        toast.message("PNG exported, but global counter update failed.");
-      }
+      await incrementGlobalLineupCountOrNotifyFailure(
+        "PNG exported, but global counter update failed.",
+      );
       posthog.capture("poster_exported");
       setExportSucceeded(true);
       toast.success("PNG downloaded.");
@@ -65,6 +73,9 @@ export function ExportActions({
       const shareOutcome = await sharePosterBlob(posterBlob);
       if (shareOutcome === "shared_via_native_dialog") {
         posthog.capture("poster_shared");
+        await incrementGlobalLineupCountOrNotifyFailure(
+          "Shared, but global counter update failed.",
+        );
         setShareSucceeded(true);
         toast.success("Shared via native share dialog.");
         setTimeout(() => setShareSucceeded(false), 3000);
@@ -73,6 +84,9 @@ export function ExportActions({
 
       if (shareOutcome === "downloaded_as_fallback") {
         posthog.capture("poster_share_downloaded_as_fallback");
+        await incrementGlobalLineupCountOrNotifyFailure(
+          "PNG downloaded, but global counter update failed.",
+        );
         toast.message("Native share not available. PNG downloaded instead.");
         return;
       }
